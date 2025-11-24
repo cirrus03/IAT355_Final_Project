@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="./css/style.css">
     <script src="./scripts/main.js" defer></script>
     <script src="https://kit.fontawesome.com/b0f29e9bfe.js" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module" src="viz/treemap_genre.js" defer></script>
+
+
 </head>
 <body>
 
@@ -40,8 +44,13 @@
                 </div>
             </div>
             <div class="back">
-                <div id="b1" class="back-content">
-                    <h1>Back 1</h1>
+                <div class="back-content back-content-genre">
+                    <select id="metric-select">
+                        <option value="reviews">Reviews</option>
+                        <option value="ratings">Ratings</option>
+                    </select>
+
+                    <div id="treemap-page"></div>
                 </div>
             </div>
         </div>
