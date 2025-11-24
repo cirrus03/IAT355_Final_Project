@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Books Scatter Plot – D3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    body { font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 24px; color: #222; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .controls { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px; align-items: end; }
+    label { display: block; font-size: 12px; color: #555; margin-bottom: 6px; }
+    select, input[type="number"] { width: 100%; padding: 6px 8px; font-size: 14px; }
+    .checkboxes { display: flex; gap: 16px; align-items: center; }
+    .chart-wrap { position: relative; }
+    svg { width: 100%; height: 600px; }
+    .axis path, .axis line { stroke: #bbb; shape-rendering: crispEdges; }
+    .axis text { fill: #333; font-size: 12px; }
+    .dot { fill-opacity: 0.7; }
+    .dot:hover { stroke: #000; stroke-width: 1px; }
+    .tooltip {
+      position: absolute; pointer-events: none; background: rgba(255,255,255,0.97);
+      border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      font-size: 13px; line-height: 1.3;
+    }
+    .legend { font-size: 12px; fill: #444; }
+    .kpi { margin-top: 10px; color: #555; font-size: 13px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Books Scatter Plot</h1>
+  <p>Explore relationships in your cleaned “Book_Details_cleaned_final.csv”. Try <em>Popularity vs Engagement</em> or <em>Pages vs Rating</em>, and use log scales for clarity on wide ranges.</p>
+
+  <div class="controls">
+    <div>
+      <label for="xField">X-Axis</label>
+      <select id="xField">
+        <option value="num_ratings">num_ratings (Popularity)</option>
+        <option value="num_reviews">num_reviews (Engagement)</option>
+        <option value="num_pages_final">num_pages_final (Pages)</option>
+        <option value="average_rating">average_rating (Avg Rating)</option>
+        <option value="publication_year">publication_year</option>
+      </select>
+    </div>
+    <div>
+      <label for="yField">Y-Axis</label>
+      <select id="yField">
+        <option value="num_reviews">num_reviews (Engagement)</option>
+        <option value="num_ratings">num_ratings (Popularity)</option>
+        <option value="average_rating" selected>average_rating (Avg Rating)</option>
+        <option value="num_pages_final">num_pages_final (Pages)</option>
+        <option value="publication_year">publication_year</option>
+      </select>
+    </div>
+    <div class="checkboxes">
+      <div>
+        <input type="checkbox" id="xLog" />
+        <label for="xLog">Log X</label>
+      </div>
+      <div>
+        <input type="checkbox" id="yLog" />
+        <label for="yLog">Log Y</label>
+      </div>
+    </div>
+    <div>
+      <label for="minPages">Min pages (filter)</label>
+      <input id="minPages" type="number" value="0" min="0" step="50" />
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <svg id="chart" viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="tooltip" id="tooltip" style="display:none;"></div>
+  </div>
+  <div class="kpi" id="kpi"></div>
+</div>
+
+<script>
+(async function() {
+  // ---- Load cleaned CSV (local path provided) ----
+  const csvUrl = "/data/book_Details_cleaned_final.csv";
+
+  const raw = await d3.csv(csvUrl, d3.autoType);
+
+  // Helpful casts & guards
+  const data = raw.map(d => ({
+    book_title: d.book_title ?? "",
+    author: d.author ?? "",
+    main_genre: d.main_genre ?? "",
+    num_ratings: +d.num_ratings,
+    num_reviews: +d.num_reviews,
+    num_pages_final: +d.num_pages_final,
+    average_rating: +d.average_rating,
+    publication_year: +d.publication_year
+  }));
+
+  // DOM refs
+  const svg = d3.select("#chart");
+  const tooltip = d3.select("#tooltip");
+  const kpi = d3.select("#kpi");
+
+  const xSel = document.getElementById("xField");
+  const ySel = document.getElementById("yField");
+  const xLog = document.getElementById("xLog");
+  const yLog = document.getElementById("yLog");
+  const minPages = document.getElementById("minPages");
+
+  // Defaults
+  xSel.value = "num_ratings";
+  ySel.value = "num_reviews";
+  xLog.checked = true;  // ratings are often very wide; log helps
+  yLog.checked = true;
+
+  // Chart dims
+  const width = 1000, height = 650;
+  const margin = { top: 30, right: 20, bottom: 60, left: 70 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const gx = g.append("g").attr("transform", `translate(0,${innerH})`).attr("class", "axis");
+  const gy = g.append("g").attr("class", "axis");
+  const xLabel = g.append("text").attr("text-anchor", "middle").attr("x", innerW/2).attr("y", innerH + 45).style("font-weight", "600");
+  const yLabel = g.append("text").attr("text-anchor", "middle").attr("transform", `translate(${-50},${innerH/2}) rotate(-90)`).style("font-weight", "600");
+
+  const dotsG = g.append("g");
+
+  function niceExtent(values, isLog) {
+    const finite = values.filter(v => Number.isFinite(v));
+    if (finite.length === 0) return [0, 1];
+    let min = d3.min(finite), max = d3.max(finite);
+    if (isLog) {
+      min = Math.max(min, 1e-6);
+      return [min, max <= 0 ? 1 : max];
+    } else {
+      const pad = (max - min) * 0.05;
+      return [min - pad, max + pad];
+    }
+  }
+
+  function update() {
+    const xKey = xSel.value;
+    const yKey = ySel.value;
+
+    // Filter: valid numbers, valid rating (0..5), and min pages
+    const filtered = data.filter(d =>
+      Number.isFinite(d[xKey]) &&
+      Number.isFinite(d[yKey]) &&
+      (!Number.isFinite(d.average_rating) || (d.average_rating >= 0 && d.average_rating <= 5)) &&
+      (!Number.isFinite(+minPages.value) || (Number.isFinite(d.num_pages_final) && d.num_pages_final >= (+minPages.value || 0)))
+    );
+
+    // Scales (log or linear)
+    const xIsLog = xLog.checked;
+    const yIsLog = yLog.checked;
+
+    const xDomain = niceExtent(filtered.map(d => d[xKey]), xIsLog);
+    const yDomain = niceExtent(filtered.map(d => d[yKey]), yIsLog);
+
+    const xScale = (xIsLog ? d3.scaleLog() : d3.scaleLinear()).domain(xDomain).range([0, innerW]).nice();
+    const yScale = (yIsLog ? d3.scaleLog() : d3.scaleLinear()).domain(yDomain).range([innerH, 0]).nice();
+
+    gx.transition().duration(400).call(d3.axisBottom(xScale).ticks(8, xIsLog ? "~s" : undefined));
+    gy.transition().duration(400).call(d3.axisLeft(yScale).ticks(8, yIsLog ? "~s" : undefined));
+
+    xLabel.text(xKey);
+    yLabel.text(yKey);
+
+    // Bind data
+    const dots = dotsG.selectAll("circle").data(filtered, d => d.book_title + "::" + d.author);
+
+    dots.exit().transition().duration(200).attr("r", 0).remove();
+
+    dots.enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 0)
+      .attr("cx", d => xScale(Math.max(d[xKey], xIsLog ? 1e-6 : d[xKey])))
+      .attr("cy", d => yScale(Math.max(d[yKey], yIsLog ? 1e-6 : d[yKey])))
+      .style("fill", "#4e79a7")
+      .on("mousemove", (event, d) => {
+        const html = `
+          <div><strong>${d.book_title || "(Untitled)"} </strong></div>
+          <div>Author: ${d.author || "—"}</div>
+          <div>${xKey}: <b>${fmt(d[xKey])}</b></div>
+          <div>${yKey}: <b>${fmt(d[yKey])}</b></div>
+          <div>Avg rating: <b>${Number.isFinite(d.average_rating) ? d.average_rating.toFixed(2) : "—"}</b></div>
+          <div>Pages: <b>${Number.isFinite(d.num_pages_final) ? d.num_pages_final : "—"}</b></div>
+          <div>Year: <b>${Number.isFinite(d.publication_year) ? d.publication_year : "—"}</b></div>
+        `;
+        tooltip.style("display", "block")
+               .style("left", (event.pageX + 14) + "px")
+               .style("top", (event.pageY + 14) + "px")
+               .html(html);
+      })
+      .on("mouseleave", () => tooltip.style("display", "none"))
+      .merge(dots)
+      .transition().duration(400)
+      .attr("r", 3.5)
+      .attr("cx", d => xScale(Math.max(d[xKey], xIsLog ? 1e-6 : d[xKey])))
+      .attr("cy", d => yScale(Math.max(d[yKey], yIsLog ? 1e-6 : d[yKey])));
+
+    // KPI summary
+    kpi.text(`Showing ${filtered.length.toLocaleString()} books | X: ${xKey} (${xIsLog ? "log" : "linear"}), Y: ${yKey} (${yIsLog ? "log" : "linear"})`);
+  }
+
+  function fmt(v) {
+    if (!Number.isFinite(v)) return "—";
+    if (Math.abs(v) >= 1000) return d3.format(".3s")(v);
+    return v.toLocaleString();
+  }
+
+  // UI listeners
+  [xSel, ySel, xLog, yLog, minPages].forEach(el => el.addEventListener("change", update));
+
+  // First render
+  update();
+})();
+</script>
+</body>
+</html>
