@@ -1,0 +1,33 @@
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FEFEE3;
+}
+
+.nav {
+    background-color: #FEFEE3;
+}
+
+
+.content-container {
+    display: flex;
+    /* justify-content: center; */
+    gap: 3rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.list-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

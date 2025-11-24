@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-body {
+/* body {
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -12,13 +12,109 @@ body {
 
     font-family: sans-serif;
     background-color: powderblue;
+} */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: sans-serif;
+    background-color: #4C956C;
 }
 
-/* Book */
+.book-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .book {
     position: relative;
-    width: 350px;
-    height: 500px;
+
+    /*Responsive width, with a safe max so it doesn’t get huge*/
+    width: min(80vw, 35rem);
+
+    /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
+    height: calc(min(80vw, 35rem) * 1.2);
+
+    margin: 0 auto;
+    transform-style: preserve-3d;
+}
+
+/*Each paper fills the book fully*/
+.paper {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    inset: 0;
+    perspective: 1500px;
+}
+
+/*Front & Back of each paper*/
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+    top: 0;
+    left: 0;
+
+    transform-origin: left;
+    transition: transform 0.5s;
+}
+
+/*readable border regardless of scaling*/
+.front {
+    border-left: 0.25rem solid #4C956C;
+}
+
+.front-content,
+.back-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2rem;
+}
+
+.front {
+    z-index: 1;
+    backface-visibility: hidden;
+    border-left: 3px solid #4C956C;
+}
+
+/*Back faces*/
+.back {
+    transform-origin: left;
+}
+
+.back-content {
+    transform: rotateY(180deg);
+}
+
+/*Flip animation*/
+.flipped .front,
+.flipped .back {
+    transform: rotateY(-180deg);
+}
+
+/*Stack order*/
+#p1 { z-index: 3; }
+#p2 { z-index: 2; }
+#p3 { z-index: 1; }
+
+/* Book */
+/* .book {
+    position: relative;
+    width: 30%;
+    height: 80%;
     transition: transform 0.5s;
 }
 
@@ -65,16 +161,16 @@ body {
 
 .back-content {
     transform: rotateY(180deg)
-}
+} */
 
 /* Paper flip effect */
-.flipped .front,
+/* .flipped .front,
 .flipped .back {
     transform: rotateY(-180deg);
-}
+} */
 
 /* Controller Buttons */
-button {
+/* button {
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -96,7 +192,7 @@ i {
 }
 
 /* Paper stack order */
-#p1 {
+/* #p1 {
     z-index: 3;
 }
 
@@ -106,4 +202,4 @@ i {
 
 #p3 {
     z-index: 1;
-}
+}  */
