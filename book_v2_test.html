@@ -7,10 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book</title>
+
+    <!--stylesheets-->
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/genre-viz.css">
+
+    <!--fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Playfair+Display+SC&display=swap" rel="stylesheet">
+
+    <!--JS/viz-->
     <script src="./scripts/main.js" defer></script>
     <script src="https://kit.fontawesome.com/b0f29e9bfe.js" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module" src="viz/treemap_genre.js" defer></script>
+
+
 </head>
 <body>
 
@@ -35,13 +47,21 @@
         <div id="p1" class="paper">
             <div class="front">
                 <div id="f1" class="front-content">
-                    <h1>Front 1</h1>
-                    <p>something</p>
+                    <h1>What makes a “good” book?</h1>
+                    <h2>Analyzing Goodreads U</h2>
                 </div>
             </div>
             <div class="back">
-                <div id="b1" class="back-content">
-                    <h1>Back 1</h1>
+                <div id="b1" class="back-content back-content-genre">
+                    <h4>Total genres and themes vs engagement and popularity</h4>
+                    <div id="treemap-page"></div>
+                    <div class="dropdown-container">
+                    <label for="metric-select">Filter between:</label>
+                    <select id="metric-select" class="styled-dropdown">
+                        <option value="reviews">Reviews</option>
+                        <option value="ratings">Ratings</option>
+                    </select>
+                    </div>
                 </div>
             </div>
         </div>
