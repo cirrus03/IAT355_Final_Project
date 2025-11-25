@@ -14,7 +14,7 @@ export async function drawTreemap(metric = "reviews") {
   // -----------------------------
   // Load LONG-FORM CSV (no try/catch)
   // -----------------------------
-  const data = await d3.csv("../assets/book_details_long_genres.csv");
+  const data = await d3.csv("assets/book_details_long_genres.csv");
   if (!data || data.length === 0) return;
 
   // -----------------------------
