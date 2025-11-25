@@ -5,21 +5,21 @@ export async function drawTreemap(metric = "reviews") {
   // Clear previous SVG & tooltip
   container.querySelectorAll("svg, div.tooltip").forEach(el => el.remove());
 
-  
+  // -----------------------------
   // Responsive sizing
- 
+  // -----------------------------
   const width = container.clientWidth;
   const height = Math.min(container.clientHeight, window.innerHeight * 0.85);
 
- 
+  // -----------------------------
   // Load LONG-FORM CSV (no try/catch)
-  
+  // -----------------------------
   const data = await d3.csv("../assets/book_details_long_genres.csv");
   if (!data || data.length === 0) return;
 
-  
+  // -----------------------------
   // Aggregate by genre
-  
+  // -----------------------------
   const genreMap = new Map();
 
   data.forEach(d => {
@@ -41,9 +41,9 @@ export async function drawTreemap(metric = "reviews") {
 
   const genresArray = Array.from(genreMap.values());
 
-  
+  // -----------------------------
   // Build hierarchy
-  
+  // -----------------------------
   const root = d3.hierarchy({ children: genresArray })
     .sum(d => d.count)
     .sort((a, b) => b.value - a.value);
@@ -57,11 +57,11 @@ export async function drawTreemap(metric = "reviews") {
 
   const color = d3.scaleSequential()
     .domain([0, maxEngagements])
-    .interpolator(d3.interpolatePuRd);
+    .interpolator(d3.interpolateBuGn);
 
-  
+  // -----------------------------
   // SVG + Tooltip
- 
+  // -----------------------------
   const svg = d3.select(container)
     .append("svg")
     .attr("width", width)
@@ -113,6 +113,8 @@ export async function drawTreemap(metric = "reviews") {
     .style("font-size", "10px")
     .style("fill", "black")
     .style("pointer-events", "none");
+
+}
 
 // Dropdown listeners
 const select = document.getElementById("metric-select");
