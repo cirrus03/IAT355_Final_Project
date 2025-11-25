@@ -16,6 +16,12 @@
     min-height: 250px;
 }
 
+#treemap-page text {
+  font-family: "Inter", sans-serif; 
+  font-size: 8px;
+  fill: var(--text-secondary);
+}
+
 .tooltip {
   position: absolute;
   background: var(--tooltips);

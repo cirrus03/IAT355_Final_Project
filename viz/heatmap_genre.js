@@ -108,6 +108,7 @@ async function drawGenreHeatmap() {
     .attr("width", cell)
     .attr("height", cell)
     .attr("fill", d => color(d.value))
+    .style("border-radius", "10px")
     .on("mouseover", (event, d) => {
       tooltip.style("opacity", 1)
         .html(`

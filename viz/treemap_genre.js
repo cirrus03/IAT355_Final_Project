@@ -110,8 +110,6 @@ export async function drawTreemap(metric = "reviews") {
       if (w < 60 || h < 25) return "";
       return d.data.genre;
     })
-    .style("font-size", "10px")
-    .style("fill", "black")
     .style("pointer-events", "none");
 
 }
