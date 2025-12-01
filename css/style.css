@@ -39,9 +39,23 @@ body {
 
 .book-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+}
+
+.button-container {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    /* margin-bottom: 0.5rem; */
+}
+
+.button-container button {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    margin: 0.2rem;
 }
 
 .book {
@@ -51,17 +65,19 @@ body {
     width: min(80vw, 35rem);
 
     /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
-    height: calc(min(80vw, 35rem) * 1.2);
+    height: calc(min(80vw, 30rem) * 1.2);
 
     margin: 0 auto;
     transform-style: preserve-3d;
+
+    margin-bottom: 1rem;
 }
 
 /*Each paper fills the book fully*/
 .paper {
     position: absolute;
     width: 90%;
-    height: 90%;
+    height: 100%;
     inset: 0;
     perspective: 1500px;
 }
@@ -152,6 +168,7 @@ label {
     font-size: 1rem;
 
 }
+
 
 
 

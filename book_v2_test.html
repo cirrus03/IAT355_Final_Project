@@ -33,71 +33,75 @@
     </nav>
 
     <div class="book-container">
-
-    <!-- Previous Button -->
-    <button id="prev-btn">
-        <!-- <i class="fas fa-arrow-circle-left"></i> -->
-         <p>previous</p>
-    </button>
-
-
-    <!-- Book -->
-    <div id="book" class="book">
-        <!-- Paper 1 -->
-        <div id="p1" class="paper">
-            <div class="front">
-                <div id="f1" class="front-content">
-                    <h1>What makes a “good” book?</h1>
-                    <h2>Analyzing Goodreads U</h2>
+    
+        <!-- Book -->
+        <div id="book" class="book">
+            <!-- Paper 1 -->
+            <div id="p1" class="paper">
+                <div class="front">
+                    <div id="f1" class="front-content">
+                        <h1>What makes a “good” book?</h1>
+                        <h2>Analyzing Goodreads U</h2>
+                    </div>
+                </div>
+                <div class="back">
+                    <div id="b1" class="back-content back-content-genre">
+                        <h4>Total genres and themes vs engagement and popularity</h4>
+                        <div id="treemap-page"></div>
+                        <div class="dropdown-container">
+                            <label for="metric-select">Filter between:</label>
+                            <select id="metric-select" class="styled-dropdown">
+                                <option value="reviews">Reviews</option>
+                                <option value="ratings">Ratings</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="back">
-                <div id="b1" class="back-content back-content-genre">
-                    <h4>Total genres and themes vs engagement and popularity</h4>
-                    <div id="treemap-page"></div>
-                    <div class="dropdown-container">
-                    <label for="metric-select">Filter between:</label>
-                    <select id="metric-select" class="styled-dropdown">
-                        <option value="reviews">Reviews</option>
-                        <option value="ratings">Ratings</option>
-                    </select>
+
+            <!-- Paper 2 -->
+            <div id="p2" class="paper">
+                <div class="front">
+                    <div id="f2" class="front-content">
+                        <h1>Front 2</h1>
+                    </div>
+                </div>
+                <div class="back">
+                    <div id="b2" class="back-content">
+                        <h1>Back 2</h1>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paper 3 -->
+            <div id="p3" class="paper">
+                <div class="front">
+                    <div id="f3" class="front-content">
+                        <h1>Front 3</h1>
+                    </div>
+                </div>
+                <div class="back">
+                    <div id="b3" class="back-content">
+                        <h1>Back 3</h1>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Paper 2 -->
-        <div id="p2" class="paper">
-            <div class="front">
-                <div id="f2" class="front-content">
-                    <h1>Front 2</h1>
-                </div>
-            </div>
-            <div class="back">
-                <div id="b2" class="back-content">
-                    <h1>Back 2</h1>
-                </div>
-            </div>
+    
+        <div class="button-container">
+            <!-- Previous Button -->
+            <button id="prev-btn">
+                <!-- <i class="fas fa-arrow-circle-left"></i> -->
+                <p>previous</p>
+            </button>
+    
+            <!-- Next Button -->
+            <button id="next-btn">
+                <!-- <i class="fas fa-arrow-circle-right"></i> -->
+                <p>forward</p>
+            </button>
         </div>
-        <!-- Paper 3 -->
-        <div id="p3" class="paper">
-            <div class="front">
-                <div id="f3" class="front-content">
-                    <h1>Front 3</h1>
-                </div>
-            </div>
-            <div class="back">
-                <div id="b3" class="back-content">
-                    <h1>Back 3</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Next Button -->
-    <button id="next-btn">
-        <!-- <i class="fas fa-arrow-circle-right"></i> -->
-         <p>forward</p>
-    </button>
+    
     </div>
 </body>
 </html>
