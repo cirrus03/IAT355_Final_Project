@@ -20,8 +20,8 @@ function openBook() {
     book.style.transform = "translateX(50%)";
     // prevBtn.style.transform = "translateX(-180px)";
     // nextBtn.style.transform = "translateX(180px)";
-    prevBtn.style.transform = "translateX(-500%)";
-    nextBtn.style.transform = "translateX(600%)";
+    // prevBtn.style.transform = "translateX(-500%)";
+    // nextBtn.style.transform = "translateX(600%)";
 }
 
 function closeBook(isAtBeginning) {
@@ -33,8 +33,8 @@ function closeBook(isAtBeginning) {
     
     // prevBtn.style.transform = "translateX(0px)";
     // nextBtn.style.transform = "translateX(0px)";
-    prevBtn.style.transform = "translateX(-100%)";
-    nextBtn.style.transform = "translateX(200%)";
+    // prevBtn.style.transform = "translateX(-100%)";
+    // nextBtn.style.transform = "translateX(200%)";
 }
 
 function goNextPage() {

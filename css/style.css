@@ -1,3 +1,16 @@
+/*main styling -- add you colors here and import this css into file*/
+
+:root {
+  --primary: #2C6E49;
+  --secondary: #8CA396;
+  --accent: #FFC9B9;
+  --background: #FEFEE3;
+  --tooltips: white;
+  --page-background: #F8F5F0;
+  --text-main: #2C6E49;
+  --text-secondary: #353535;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -21,14 +34,28 @@ body {
     align-items: center;
 
     font-family: sans-serif;
-    background-color: #4C956C;
+    background-color: var(--background);
 }
 
 .book-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+}
+
+.button-container {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    /* margin-bottom: 0.5rem; */
+}
+
+.button-container button {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    margin: 0.2rem;
 }
 
 .book {
@@ -38,17 +65,19 @@ body {
     width: min(80vw, 35rem);
 
     /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
-    height: calc(min(80vw, 35rem) * 1.2);
+    height: calc(min(80vw, 30rem) * 1.2);
 
     margin: 0 auto;
     transform-style: preserve-3d;
+
+    margin-bottom: 1rem;
 }
 
 /*Each paper fills the book fully*/
 .paper {
     position: absolute;
     width: 90%;
-    height: 90%;
+    height: 100%;
     inset: 0;
     perspective: 1500px;
 }
@@ -59,7 +88,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: white;
+    background: var(--page-background);
     top: 0;
     left: 0;
 
@@ -69,7 +98,7 @@ body {
 
 /*readable border regardless of scaling*/
 .front {
-    border-left: 0.25rem solid #4C956C;
+    border-left: 0.25rem solid var(--primary);
 }
 
 .front-content,
@@ -81,18 +110,27 @@ body {
     justify-content: center;
     align-items: center;
 
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .front {
     z-index: 1;
     backface-visibility: hidden;
-    border-left: 3px solid #4C956C;
+    border-right: 15px solid var(--primary);
+    border-left: 3px solid var(--primary);
+
 }
 
 /*Back faces*/
 .back {
     transform-origin: left;
+    border-left: 15px solid var(--primary);
+    border-right: 3px solid var(--primary);
+}
+
+.back, .front {
+    border-top: 15px solid var(--primary);
+    border-bottom: 15px solid var(--primary);
 }
 
 .back-content {
@@ -109,6 +147,30 @@ body {
 #p1 { z-index: 3; }
 #p2 { z-index: 2; }
 #p3 { z-index: 1; }
+
+h1, h2, h3, h4, p, label {
+    color: var(--text-main);
+}
+h1, h2, h3, h4{
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+}
+
+p {
+  font-family: "Playfair", serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+label {
+    font-family: "Playfair", serif;
+    font-weight: 500;
+    font-size: 1rem;
+
+}
+
+
+
 
 /* Book */
 /* .book {
