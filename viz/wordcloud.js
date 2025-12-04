@@ -1,4 +1,3 @@
-
 // STOPWORD LIST
 const stopwords = new Set([
   // Standard English stopwords
@@ -24,7 +23,7 @@ const stopwords = new Set([
 
   // Generic adjectives that add noise
   "really","pretty","quite","rather","basically","literally","honestly",
-  "actually","obviously","definitely","kind","sort","different","same",
+  "actually","obviously","definitely","kind","sort","different","same", "like",
 
   // Time / meta words reviewers use
   "finally","overall","however","though","through","during","after","before",
@@ -63,12 +62,11 @@ function makeBigrams(tokens) {
 }
 
 
-
 function WordCloud(freqWords, {
   width = 500,
-  height = 550,
+  height = 500,
   maxWords = 100,
-  fontScale = .5,
+  fontScale = .8,
   padding = 2,
   rotate = () => 0,
   fill = "steelblue",
@@ -124,6 +122,61 @@ async function initWordCloud() {
 
     console.log("Columns:", Object.keys(reviews[0]));
 
+    // --- FILTER 1: High-rated reviews (4.4–5) ---
+    const highRated = reviews.filter(d => +d.review_rating_n >= 4.4);
+
+    // --- FILTER 2: Low-rated reviews (< 3) ---
+    const lowRated = reviews.filter(d => +d.review_rating_n < 2);
+
+    console.log("Total reviews:", reviews.length);
+    console.log("High-rated reviews:", highRated.length);
+    console.log("Low-rated reviews:", lowRated.length);
+
+    // ---- PROCESS FUNCTION (shared by both clouds) ----
+    function processReviews(reviewArray) {
+      const allText = reviewArray.map(d => d.review_content_clean).join(" ");
+      const tokens = tokenize(allText);
+      const bigrams = makeBigrams(tokens);
+
+      return d3.rollups(bigrams, v => v.length, d => d)
+        .sort((a, b) => d3.descending(a[1], b[1]))
+        .slice(0, 200)
+        .map(([text, size]) => ({ text, size }));
+    }
+
+    // --- BIGRAM FREQUENCY LISTS ---
+    const bigramsHigh = processReviews(highRated);
+    const bigramsLow  = processReviews(lowRated);
+
+    console.log("Top high-rated bigrams:", bigramsHigh.slice(0, 10));
+    console.log("Top low-rated bigrams:", bigramsLow.slice(0, 10));
+
+    // --- RENDER BOTH WORD CLOUDS ---
+    WordCloud(bigramsHigh, {
+      selector: "#wordcloud_high",
+      fill: "steelblue"
+    });
+
+    WordCloud(bigramsLow, {
+      selector: "#wordcloud_low",
+      fill: "crimson",
+      fontScale: 1.2
+    });
+
+  } catch (err) {
+    console.error("Error loading CSV:", err);
+  }
+}
+
+initWordCloud();
+
+
+{/*async function initWordCloud() {
+  try {
+    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
+
+    console.log("Columns:", Object.keys(reviews[0]));
+
     // --- FILTER: Only reviews from books rated 4.4–5 ---
     const filtered = reviews.filter(d => +d.review_rating_n >= 4.4);
 
@@ -157,65 +210,6 @@ async function initWordCloud() {
   } catch (err) {
     console.error("Error loading CSV:", err);
   }
-}
-
-
-
-
-{/*async function initWordCloud() {
-  try {
-    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
-
-    console.log("Columns:", Object.keys(reviews[0]));
-
-    // --- filter: Only books with rating 4.4+ ---
-    const filtered = reviews.filter(d => +d.review_rating_n >= 4.4);
-
-    console.log("Total reviews:", reviews.length);
-    console.log("Filtered (4.2–5 stars):", filtered.length);
-
-    // Combine text from filtered reviews
-    const allText = filtered
-      .map(d => d.review_content_clean) 
-      .join(" ");
-
-    // --- Tokenize ---
-    const words = tokenize(allText);
-
-    console.log("Token count after filtering:", words.length);
-
-    const limitedWords = words.slice(0, 50000);
-
-    // --- Build cloud ---
-    WordCloud(limitedWords);
-
-  } catch (err) {
-    console.error("Error loading CSV:", err);
-  }
 } */}
 
-
-
-// LOAD CSV
-{/*async function initWordCloud() {
-
-  try {
-    // Load CSV from assets
-    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
-
-    // Combine all review text
-    const allText = reviews
-      .map(d => d.review_content_clean)
-      .join(" ");
-
-      const words = tokenize(allText).slice(0, 50000);
-
-    // Build cloud
-    WordCloud(words);
-  } catch (err) {
-    console.error("Error loading CSV:", err);
-  }
-} */}
-
-// AUTO-RUN WHEN SCRIPT LOADS
 initWordCloud();

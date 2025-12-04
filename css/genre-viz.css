@@ -9,18 +9,21 @@
     padding: 1rem;
 }
 
-#treemap-page {
+#treemap-page, #genre-bar-chart {
     width: 100%;
     height: 90%;
     position: relative;
     min-height: 250px;
 }
 
-#treemap-page text {
+#treemap-page text, #genre-bar-chart text {
   font-family: "Inter", sans-serif; 
   font-size: 8px;
   fill: var(--text-secondary);
 }
+
+
+
 
 .tooltip {
   position: absolute;
@@ -55,4 +58,34 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 4px (--accent);
+}
+
+#genre-bar-chart svg {
+  border-radius: 6px;
+}
+
+/* SVG base */
+ .chart-svg {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+/* Axes */
+ .x-axis text, .y-axis text {
+  fill: #333;
+  font-size: 12px;
+}
+.x-axis line, .y-axis line {
+  stroke: #ccc;
+}
+/* Bars */
+.bar-rect {
+  fill: #8CA496;
+  rx: 4px;  /* rounded corners */
+  ry: 4px;
+  transition: fill 0.3s;
+}
+.bar-rect:hover {
+  fill: #a4aea8;
 }
