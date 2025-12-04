@@ -15,6 +15,8 @@
     <!-- project scripts -->
     <script src="./scripts/main.js" defer></script>
     <script type="module" src="./viz/treemap_genre.js" defer></script>
+    <script src="./viz/genre.js" defer></script>
+
     <script src="/viz/wordcloud.js"></script>
 
 
@@ -22,10 +24,6 @@
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/genre-viz.css">
-
-  <script>
-  console.log("d3.layout.cloud =", typeof d3?.layout?.cloud);
-</script>
 
 
 </head>
@@ -111,13 +109,22 @@
             <div id="p4" class="paper">
                 <div class="front">
                     <div id="f4" class="front-content">
-                        <h1>front</h1>
+                        <h3 id="genre-chart-title">Total genres and themes vs engagement and popularity</h3>
+                            <div class="dropdown-container">
+                            <label for="genre-metric-select">Show:</label>
+                            <select id="genre-metric-select" class="styled-dropdown">
+                                <option value="ratings">Total Ratings</option>
+                                <option value="reviews">Total Reviews</option>
+                            </select>
+                            </div>
+                            <div id="genre-bar-chart"></div>
                     </div>
                 </div>
 
                 <div class="back">
                     <div id="b4" class="back-content">
-                        <h1>Back 4</h1>
+                        <h2>Chapter 4: What do reader have to say?</h2>
+
                     </div>
                 </div>
             </div>
@@ -126,13 +133,16 @@
             <div id="p5" class="paper">
                 <div class="front">
                     <div id="f5" class="front-content">
-                        <div id="wordcloud"></div>
+                        <h4>Top Bigram Themes from 4.2–5 Star Reviews</h4>
+                        <div id="wordcloud_high"></div>
+
                     </div>
                 </div>
 
                 <div class="back">
                     <div id="b5" class="back-content">
-                        <h1>back 5</h1>
+                        <h1>Low ratings</h1>
+
                     </div>
                 </div>
             </div>
@@ -141,7 +151,8 @@
             <div id="p6" class="paper">
                 <div class="front">
                     <div id="f6" class="front-content">
-                        <h1>front</h1>
+                        <h4>Top Bigram Themes from 1-2.5 Star Reviews</h4>
+                        <div id="wordcloud_low"></div>
                     </div>
                 </div>
 
