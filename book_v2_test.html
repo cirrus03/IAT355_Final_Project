@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book</title>
 
-    <!--stylesheets-->
+    <!-- D3  -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- d3-cloud) -->
+    <script src="./viz/lib/d3.layout.cloud.js"></script>
+
+    <!-- project scripts -->
+    <script src="./scripts/main.js" defer></script>
+    <script type="module" src="./viz/treemap_genre.js" defer></script>
+    <script src="/viz/wordcloud.js"></script>
+
+
+    <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/genre-viz.css">
 
-    <!--fonts-->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Playfair+Display+SC&display=swap" rel="stylesheet">
-
-    <!--JS/viz-->
-    <script src="./scripts/main.js" defer></script>
-    <script src="https://kit.fontawesome.com/b0f29e9bfe.js" crossorigin="anonymous"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script type="module" src="viz/treemap_genre.js" defer></script>
+  <script>
+  console.log("d3.layout.cloud =", typeof d3?.layout?.cloud);
+</script>
 
 
 </head>
@@ -41,20 +46,12 @@
                 <div class="front">
                     <div id="f1" class="front-content">
                         <h1>What makes a “good” book?</h1>
-                        <h2>Analyzing Goodreads U</h2>
+                        <h2>Analyzing Goodreads Users</h2>
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b1" class="back-content back-content-genre">
-                        <h4>Total genres and themes vs engagement and popularity</h4>
-                        <div id="treemap-page"></div>
-                        <div class="dropdown-container">
-                            <label for="metric-select">Filter between:</label>
-                            <select id="metric-select" class="styled-dropdown">
-                                <option value="reviews">Reviews</option>
-                                <option value="ratings">Ratings</option>
-                            </select>
-                        </div>
+                    <div id="b1" class="back-content">
+                        <h1>Back 1</h1>
                     </div>
                 </div>
             </div>
@@ -77,16 +74,71 @@
             <div id="p3" class="paper">
                 <div class="front">
                     <div id="f3" class="front-content">
-                        <h1>Front 3</h1>
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b3" class="back-content">
-                        <h1>Back 3</h1>
+                    <div id="b3" class="back-content back-content-genre">
+                        <h1>back 3</h1>
+                        <h4>Total genres and themes vs engagement and popularity</h4>
+                        <div id="treemap-page"></div>
+                        <div class="dropdown-container">
+                            <label for="metric-select">Filter between:</label>
+                            <select id="metric-select" class="styled-dropdown">
+                                <option value="reviews">Reviews</option>
+                                <option value="ratings">Ratings</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paper 4 -->
+            <div id="p4" class="paper">
+                <div class="front">
+                    <div id="f4" class="front-content">
+                        <h1>front</h1>
+                    </div>
+                </div>
+
+                <div class="back">
+                    <div id="b4" class="back-content">
+                        <h1>Back 4</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paper 5 -->
+            <div id="p5" class="paper">
+                <div class="front">
+                    <div id="f5" class="front-content">
+                        <div id="wordcloud"></div>
+                    </div>
+                </div>
+
+                <div class="back">
+                    <div id="b5" class="back-content">
+                        <h1>back 5</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paper 6 -->
+            <div id="p6" class="paper">
+                <div class="front">
+                    <div id="f6" class="front-content">
+                        <h1>front</h1>
+                    </div>
+                </div>
+
+                <div class="back">
+                    <div id="b6" class="back-content">
+                        <h1>back cover</h1>
                     </div>
                 </div>
             </div>
         </div>
+
+
     
         <div class="button-container">
             <!-- Previous Button -->
@@ -103,6 +155,7 @@
         </div>
     
     </div>
+
 </body>
 </html>
 
