@@ -178,6 +178,7 @@ label {
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    height: 100%;
 }
 
 .page {
@@ -187,6 +188,7 @@ label {
     padding: 20px;
     background-color: lightgray;
     border: 1px solid gray;
+    height: 100%;
 }
 
 
@@ -200,7 +202,7 @@ label {
 @media (width > 48rem) {
     .book {
     /*Responsive width, with a safe max so it doesn’t get huge*/
-    width: min(80vw, 27rem);
+    width: min(80vw, 25rem);
 
     /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
     height: calc(min(80vw, 27rem) * 1.2);
@@ -214,6 +216,37 @@ label {
     }
 }
 
+@media (width > 51.25rem) {
+    .book {
+    /*Responsive width, with a safe max so it doesn’t get huge*/
+    width: min(80vw, 27rem);
+
+    /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
+    height: calc(min(80vw, 28rem) * 1.2);
+    }
+
+    /* don't display mobile book */
+    .mobile-size {
+        display: none;
+    }
+}
+
+@media (width > 57.125rem) {
+    .book {
+    /*Responsive width, with a safe max so it doesn’t get huge*/
+    width: min(80vw, 30rem);
+
+    /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
+    height: calc(min(80vw, 28rem) * 1.2);
+    }
+
+    /* don't display mobile book */
+    .mobile-size {
+        display: none;
+    }
+}
+
+
 @media (width > 64rem) {
     .book {
     /*Responsive width, with a safe max so it doesn’t get huge*/
@@ -221,6 +254,36 @@ label {
 
     /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
     height: calc(min(80vw, 28rem) * 1.2);
+    }
+
+    /* don't display mobile book */
+    .mobile-size {
+        display: none;
+    }
+}
+
+@media (width > 77rem) {
+    .book {
+    /*Responsive width, with a safe max so it doesn’t get huge*/
+    width: min(80vw, 40rem);
+
+    /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
+    height: calc(min(80vw, 28rem) * 1.2);
+    }
+
+    /* don't display mobile book */
+    .mobile-size {
+        display: none;
+    }
+}
+
+@media (width > 87.5rem) {
+    .book {
+    /*Responsive width, with a safe max so it doesn’t get huge*/
+    width: min(80vw, 43rem);
+
+    /*Maintain page aspect ratio (1.414 = A4 ratio, looks book-like)*/
+    height: calc(min(80vw, 28rem) * 1.5);
     }
 
     /* don't display mobile book */
