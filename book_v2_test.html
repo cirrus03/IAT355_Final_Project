@@ -15,8 +15,9 @@
     <!-- project scripts -->
     <script src="./scripts/main.js" defer></script>
     <script type="module" src="./viz/treemap_genre.js" defer></script>
-    <script src="./viz/genre.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
+    <script src="./viz/genre-linechart.js"></script>
+
 
     
 
@@ -110,15 +111,7 @@
             <div id="p4" class="paper">
                 <div class="front">
                     <div id="f4" class="front-content">
-                        <h3 id="genre-chart-title">Total genres and themes vs engagement and popularity</h3>
-                            <div class="dropdown-container">
-                            <label for="genre-metric-select">Show:</label>
-                            <select id="genre-metric-select" class="styled-dropdown">
-                                <option value="ratings">Total Ratings</option>
-                                <option value="reviews">Total Reviews</option>
-                            </select>
-                            </div>
-                            <div id="genre-bar-chart"></div>
+                            <div id="chart"></div>
                     </div>
                 </div>
 
