@@ -118,7 +118,7 @@ function WordCloud(freqWords, {
 
 async function initWordCloud() {
   try {
-    const reviews = await d3.csv("../assets/book_reviews_cleaned.csv");
+    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
 
     console.log("Columns:", Object.keys(reviews[0]));
 
