@@ -116,22 +116,38 @@ async function releaseTrends() {
   // DRAW LINES
   // ----------------------------
   const lines = g.selectAll(".genre-line")
-    .data(counts)
-    .join("path")
-    .attr("class", "genre-line")
-    .attr("fill", "none")
-    .attr("stroke", d => color(d.genre))
-    .attr("stroke-width", 1.8)
-    .attr("d", d => line(d.values))
-    .style("cursor", "pointer")
-    .on("click", (event, d) => toggleGenre(d.genre))
-    .on("mousemove", (event, d) => {
-      tooltip.style("opacity", 1)
-        .html(`<strong>${d.genre}</strong>`)
-        .style("left", event.pageX + 10 + "px")
-        .style("top", event.pageY + 10 + "px");
-    })
-    .on("mouseout", () => tooltip.style("opacity", 0));
+  .data(counts)
+  .join("path")
+  .attr("class", "genre-line")
+  .attr("fill", "none")
+  .attr("stroke", d => color(d.genre))
+  .attr("stroke-width", 1.8)
+  .attr("pointer-events", "stroke")   // ★★ REQUIRED ★★
+  .attr("d", d => line(d.values))
+  .style("cursor", "pointer")
+  .on("click", (event, d) => toggleGenre(d.genre))
+  .on("mousemove", function(event, d) {
+
+    tooltip.style("opacity", 1); // make visible
+
+    const [mx] = d3.pointer(event, event.currentTarget);
+    const hoveredYear = Math.round(x.invert(mx));
+
+    const closest = d.values.reduce((a, b) =>
+      Math.abs(b.year - hoveredYear) < Math.abs(a.year - hoveredYear) ? b : a
+    );
+
+    tooltip
+      .html(`
+        <strong>${d.genre}</strong><br>
+        Year: ${closest.year}<br>
+        Trend: ${closest.smooth?.toFixed(1) ?? "N/A"}
+      `)
+      .style("left", event.pageX + 12 + "px")
+      .style("top", event.pageY + 12 + "px");
+  })
+  .on("mouseout", () => tooltip.style("opacity", 0));   // ★ restore hiding
+
 
   // ----------------------------
   // X-AXIS
