@@ -9,6 +9,7 @@
   --page-background: #F8F5F0;
   --text-main: #2C6E49;
   --text-secondary: #353535;
+  --legend-color: #fffbf7;
 }
 
 * {
@@ -96,10 +97,16 @@ body {
     transition: transform 0.5s;
 }
 
-/*readable border regardless of scaling*/
+/*Title page styling*/
+.title-page {
+    background: var(--primary);
+}
+
+
+/*readable border regardless of scaling
 .front {
     border-left: 0.25rem solid var(--primary);
-}
+} */
 
 .front-content,
 .back-content {
@@ -107,11 +114,12 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+   /* justify-content: center;
+    align-items: center;*/
 
     padding: 1rem;
 }
+
 
 .front {
     z-index: 1;
@@ -124,14 +132,23 @@ body {
 /*Back faces*/
 .back {
     transform-origin: left;
-    border-left: 15px solid var(--primary);
-    border-right: 3px solid var(--primary);
+    border-right: 15px solid var(--primary);
+    border-left: 3px solid var(--primary);
 }
 
 .back, .front {
     border-top: 15px solid var(--primary);
     border-bottom: 15px solid var(--primary);
 }
+
+.title-page-layout {
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--background);
+    padding: 4rem;
+    padding-left: 5rem;
+}
+
 
 .back-content {
     transform: rotateY(180deg);
@@ -151,27 +168,37 @@ body {
 #p5 { z-index: 2; }
 #p6 { z-index: 1; }
 
+h1 {
+    color: var(--background);
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: 2.5rem;
+    text-align: center;
+}
 
-
-h1, h2, h3, h4, p, label {
+h2, h3, h4, p, label {
     color: var(--text-main);
 }
-h1, h2, h3, h4{
+
+h2, h3, h4{
   font-family: "Playfair Display", serif;
   font-weight: 500;
+}
+
+#title-subtitle {
+    color: var(--background)
 }
 
 p {
   font-family: "Playfair", serif;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 label {
     font-family: "Playfair", serif;
     font-weight: 500;
     font-size: 1rem;
-
 }
 
 
@@ -193,6 +220,10 @@ label {
     background-color: lightgray;
     border: 1px solid gray;
     height: 100%;
+}
+
+.text-spacing {
+    padding-top: 1rem !important;
 }
 
 

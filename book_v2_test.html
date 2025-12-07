@@ -14,17 +14,12 @@
 
     <!-- project scripts -->
     <script src="./scripts/main.js" defer></script>
-    <script type="module" src="./viz/treemap_genre.js" defer></script>
-    <script src="./viz/genre.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
-
-    
-
+    <script src="./viz/genre-linechart.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="./css/genre-viz.css">
 
 
 </head>
@@ -57,10 +52,10 @@
         <div id="book" class="book">
             <!-- Paper 1 -->
             <div id="p1" class="paper">
-                <div class="front">
-                    <div id="f1" class="front-content">
+                <div class="front title-page">
+                    <div id="f1" class="front-content title-page-layout">
                         <h1>What makes a “good” book?</h1>
-                        <h2>Analyzing Goodreads Users</h2>
+                        <h2 id="title-subtitle">Analyzing Goodreads Users</h2>
                     </div>
                 </div>
                 <div class="back">
@@ -91,17 +86,8 @@
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b3" class="back-content back-content-genre">
-                        <h1>back 3</h1>
-                        <h4>Total genres and themes vs engagement and popularity</h4>
-                        <div id="treemap-page"></div>
-                        <div class="dropdown-container">
-                            <label for="metric-select">Filter between:</label>
-                            <select id="metric-select" class="styled-dropdown">
-                                <option value="reviews">Reviews</option>
-                                <option value="ratings">Ratings</option>
-                            </select>
-                        </div>
+                    <div id="b3" class="back-content">
+                        
                     </div>
                 </div>
             </div>
@@ -110,22 +96,19 @@
             <div id="p4" class="paper">
                 <div class="front">
                     <div id="f4" class="front-content">
-                        <h3 id="genre-chart-title">Total genres and themes vs engagement and popularity</h3>
-                            <div class="dropdown-container">
-                            <label for="genre-metric-select">Show:</label>
-                            <select id="genre-metric-select" class="styled-dropdown">
-                                <option value="ratings">Total Ratings</option>
-                                <option value="reviews">Total Reviews</option>
-                            </select>
-                            </div>
-                            <div id="genre-bar-chart"></div>
+            
                     </div>
                 </div>
 
                 <div class="back">
                     <div id="b4" class="back-content">
-                        <h2>Chapter 4: What do reader have to say?</h2>
+                        <h2>Chapter 3: What genres and themes people seem to love?</h2>
+                        <p class="text-spacing">Goodreads ratings often suggest that a “good” book is universally agreed upon, but the data tells a different story. When we look at the top 25 genres from 1980–2025, clear popularity cycles emerge: fantasy, adult fiction, romance, and mystery & crime experience massive spikes in the 2000s and early 2010s, reflecting mainstream cultural phenomena and large, active reader communities. Meanwhile, genres like world literature, classics, and religious & spiritual remain steady but far less visible—not because the books are lower quality, but because fewer users engage with them on the platform.</p>
+                        
+                        <p class="text-spacing">These differences reveal a core bias in how Goodreads defines what makes a book “good.” Highly active genre communities generate more reviews, drive up visibility, and shape the collective perception of quality. As a result, Goodreads ratings often reflect popularity more than literary value, amplifying dominant genres while pushing quieter categories to the margins. Understanding these patterns helps us interpret ratings more critically and recognize that a book’s worth extends beyond the trends that happen to dominate a given era.</p>
 
+                        <h4 class="text-spacing">Genre Legend</h4>
+                        <div id="genre-legend" class="genre-legend-container"></div>
                     </div>
                 </div>
             </div>
@@ -134,16 +117,13 @@
             <div id="p5" class="paper">
                 <div class="front">
                     <div id="f5" class="front-content">
-                        <h4>Top Bigram Themes from 4.2–5 Star Reviews</h4>
-                        <div id="wordcloud_high"></div>
-
+                        <div id="chart"></div>
                     </div>
                 </div>
 
                 <div class="back">
                     <div id="b5" class="back-content">
-                        <h1>Low ratings</h1>
-
+                        <h2>Epilogue: </h2>
                     </div>
                 </div>
             </div>
@@ -152,8 +132,8 @@
             <div id="p6" class="paper">
                 <div class="front">
                     <div id="f6" class="front-content">
-                        <h4>Top Bigram Themes from 1-2.5 Star Reviews</h4>
-                        <div id="wordcloud_low"></div>
+                        <h4 id="wordcloud-title">High vs Low Bigram's from Reviews</h4>
+                        <div id="wordcloud_combined"></div>
                     </div>
                 </div>
 
