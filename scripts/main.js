@@ -29,6 +29,17 @@ function openBook() {
     // nextBtn.style.transform = "translateX(600%)";
 }
 
+function deactivateAfterFlip(paper) {
+    setTimeout(() => {
+        paper.classList.add("inactive");
+    }, 600); // match CSS transition time
+}
+
+function activateBeforeUnflip(paper) {
+    paper.classList.remove("inactive");
+}
+
+
 function closeBook(isAtBeginning) {
     if(isAtBeginning) {
         book.style.transform = "translateX(0%)";
@@ -49,26 +60,34 @@ function goNextPage() {
                 openBook();
                 paper1.classList.add("flipped");
                 paper1.style.zIndex = 1;
+                deactivateAfterFlip(paper1);
+
                 break;
             case 2:
                 paper2.classList.add("flipped");
                 paper2.style.zIndex = 2;
+                deactivateAfterFlip(paper2);
+
                 break;
              case 3:
                 paper3.classList.add("flipped");
                 paper3.style.zIndex = 3;
+                deactivateAfterFlip(paper3);
                 break;
             case 4:
                 paper4.classList.add("flipped");
                 paper4.style.zIndex = 4;
+                deactivateAfterFlip(paper4);
                 break;
             case 5:
                 paper5.classList.add("flipped");
                 paper5.style.zIndex = 5;
+                deactivateAfterFlip(paper5);
                 break;
             case 6:
                 paper6.classList.add("flipped");
                 paper6.style.zIndex = 6;
+                deactivateAfterFlip(paper6);
                 closeBook(false);
                 break;
             default:
@@ -87,26 +106,31 @@ function goPrevPage() {
                 paper1.style.zIndex = 6;
                 break;
             case 3:
+                activateBeforeUnflip(paper2);
                 paper2.classList.remove("flipped");
                 paper2.style.zIndex = 5;
                 break;
             case 4:
                 openBook();
+                activateBeforeUnflip(paper3);
                 paper3.classList.remove("flipped");
                 paper3.style.zIndex = 4;
                 break;
             case 5:
                 openBook();
+                activateBeforeUnflip(paper4);
                 paper4.classList.remove("flipped");
                 paper4.style.zIndex = 3;
                 break;
             case 6:
                 openBook();
+                activateBeforeUnflip(paper5);
                 paper5.classList.remove("flipped");
                 paper5.style.zIndex = 2;
                 break;    
             case 7:
                 openBook();
+                activateBeforeUnflip(paper6);
                 paper6.classList.remove("flipped");
                 paper6.style.zIndex = 1;
                 break;          

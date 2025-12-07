@@ -22,10 +22,14 @@
 }
 
 #chart {
-  background-color: #f8f4ec;
+  position: relative;
+  outline: 1px solid red; /* Highlights every element's boundary */
+   background-color: #f8f4ec;
   padding: 10px;
   border-radius: 8px;
+  z-index: 5;
 }
+
 
 #genre-legend {
   display: grid;

@@ -81,7 +81,20 @@ body {
     height: 100%;
     inset: 0;
     perspective: 1500px;
+    /*pointer-events: none; */
 }
+
+.paper.inactive {
+    pointer-events: none !important;
+}
+.paper {
+    pointer-events: auto;
+}
+.front, .back, .front-content, .back-content {
+    pointer-events: auto;
+}
+
+
 
 /*Front & Back of each paper*/
 .front,
@@ -225,6 +238,19 @@ label {
 .text-spacing {
     padding-top: 1rem !important;
 }
+
+.tooltip {
+  background: var(--legend-color);
+  color: var(--text-main);
+  border: 1px solid var(--secondary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: "Playfair Display", serif;
+  font-size: 12px;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
 
 
 

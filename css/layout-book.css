@@ -4,3 +4,7 @@
     box-sizing: border-box;
 }
 
+#book, .paper, .front, .back {
+    overflow: visible !important;
+}
+
