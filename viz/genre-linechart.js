@@ -80,7 +80,9 @@ async function releaseTrends() {
     .attr("y", margin.top)
     .attr("width", width - margin.left - margin.right)
     .attr("height", height - margin.top - margin.bottom)
-    .attr("fill", "var(--page-background)");
+    .attr("fill", "var(--page-background)")
+    .attr("pointer-events", "none");
+
 
 
   const g = svg.append("g")
@@ -302,139 +304,137 @@ const color = d3.scaleOrdinal()
 // ------------------------------------
 // FINAL 2-COLUMN LEGEND WITH DESCRIPTIONS + INTERACTIONS
 // ------------------------------------
-const legendContainer = document.getElementById("genre-legend");
-legendContainer.innerHTML = "";
+setTimeout(() => {
 
-// Optional genre descriptions
-const genreDescriptions = {
-  "fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
-  "adult fiction": "Fiction intended for mature readers, often with complex themes.",
-  "romance": "Stories focused on relationships, attraction, and emotional intimacy.",
-  "paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
-  "contemporary life": "Modern-day realistic stories about everyday experiences.",
-  "mystery & crime": "Detective stories, investigations, and crime-solving.",
-  "historical fiction": "Stories set in real past historical periods.",
-  "literature & classics": "Critically acclaimed works and timeless novels.",
-  "world literature": "Books originating from global cultures and languages.",
-  "science fiction": "Speculative stories involving science, future tech, or space.",
-  "adventure": "Action-driven stories with exploration or high-risk journeys.",
-  "historical": "Nonfiction or fiction grounded heavily in history.",
-  "kids & pre-teens": "Books written for children aged 8–12.",
-  "horror": "Stories meant to scare, unsettle, or thrill.",
-  "other / niche": "Genres that don’t fit common categories.",
-  "dark & erotic": "Mature stories exploring sensual or taboo topics.",
-  "chick lit": "Lighthearted stories focusing on modern women’s lives.",
-  "classics": "Canon literature with cultural significance.",
-  "comedy": "Humorous and lighthearted storytelling.",
-  "dystopian": "Bleak future societies with oppressive control.",
-  "ideas & growth": "Self-help, philosophy, and personal development.",
-  "comics & manga": "Illustrated storytelling in comic or manga format.",
-  "lgbtq+": "Stories featuring queer identities, love, and themes.",
-  "drama": "Emotionally intense character-driven stories.",
-  "religious & spiritual": "Faith-based, spiritual growth, or religious topics."
-};
+  const legendContainer = document.getElementById("genre-legend");
+  legendContainer.innerHTML = "";
 
+  // Descriptions dictionary
+  const genreDescriptions = {
+    "fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
+    "adult fiction": "Fiction intended for mature readers, often with complex themes.",
+    "romance": "Stories focused on relationships, attraction, and emotional intimacy.",
+    "paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
+    "contemporary life": "Modern-day realistic stories about everyday experiences.",
+    "mystery & crime": "Detective stories, investigations, and crime-solving.",
+    "historical fiction": "Stories set in real past historical periods.",
+    "literature & classics": "Critically acclaimed works and timeless novels.",
+    "world literature": "Books originating from global cultures and languages.",
+    "science fiction": "Speculative stories involving science, future tech, or space.",
+    "adventure": "Action-driven stories with exploration or high-risk journeys.",
+    "historical": "Nonfiction or fiction grounded heavily in history.",
+    "kids & pre-teens": "Books written for children aged 8–12.",
+    "horror": "Stories meant to scare, unsettle, or thrill.",
+    "other / niche": "Genres that don’t fit common categories.",
+    "dark & erotic": "Mature stories exploring sensual or taboo topics.",
+    "chick lit": "Lighthearted stories focusing on modern women’s lives.",
+    "classics": "Canon literature with cultural significance.",
+    "comedy": "Humorous and lighthearted storytelling.",
+    "dystopian": "Bleak future societies with oppressive control.",
+    "ideas & growth": "Self-help, philosophy, and personal development.",
+    "comics & manga": "Illustrated storytelling in comic or manga format.",
+    "lgbtq+": "Stories featuring queer identities, love, and themes.",
+    "drama": "Emotionally intense character-driven stories.",
+    "religious & spiritual": "Faith-based, spiritual growth, or religious topics."
+  };
 
-// Legend layout
-Object.assign(legendContainer.style, {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "5px 12px",
-  width: "100%",
-  padding: "8px",
-  overflow: "visible",
-  background: "var(--legend-color)",  
-  border: "1px solid var(--secondary)",
-  borderRadius: "8px",
-  marginTop: "12px"
-});
-
-// Build each legend entry
-top25.forEach(genre => {
-  const item = document.createElement("div");
-  item.className = "legend-item"; 
-  item.dataset.genre = genre;
-
-  Object.assign(item.style, {
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    overflow: "visible",
+  // Layout styles
+  Object.assign(legendContainer.style, {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "5px 12px",
+    width: "100%",
+    padding: "8px",
+    background: "var(--legend-color)",
+    border: "1px solid var(--secondary)",
+    borderRadius: "8px",
+    marginTop: "12px"
   });
 
-  // Color box + label row
-  const row = document.createElement("div");
-  Object.assign(row.style, {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: "4px"
+  // Build ONE legend item per genre
+  top25.forEach(genre => {
+
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    item.dataset.genre = genre;
+
+    Object.assign(item.style, {
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start"
+    });
+
+    // Row with color + label
+    const row = document.createElement("div");
+    Object.assign(row.style, {
+      display: "flex",
+      alignItems: "center",
+      gap: "4px"
+    });
+
+    const colorBox = document.createElement("div");
+    Object.assign(colorBox.style, {
+      width: "10px",
+      height: "10px",
+      borderRadius: "10px",
+      background: color(genre)
+    });
+
+    const label = document.createElement("span");
+    label.textContent = genre;
+    label.style.fontSize = "0.55rem";
+    label.style.fontWeight = "500";
+    label.style.fontFamily = "'Playfair Display', serif";
+
+    row.appendChild(colorBox);
+    row.appendChild(label);
+
+    // Description
+    const desc = document.createElement("span");
+    desc.textContent = genreDescriptions[genre];
+    desc.style.fontSize = "0.55rem";
+    desc.style.opacity = "0.7";
+    desc.style.marginLeft = "16px";
+    desc.style.fontFamily = "'Playfair Display', serif";
+
+    item.appendChild(row);
+    item.appendChild(desc);
+
+    legendContainer.appendChild(item);
   });
 
-  const colorBox = document.createElement("div");
-  Object.assign(colorBox.style, {
-    width: "10px",
-    height: "10px",
-    borderRadius: "10px",
-    background: color(genre),
-    flexShrink: "0"
-  });
+  // ------------------------------------
+  // INTERACTIONS
+  // ------------------------------------
+  document.querySelectorAll(".legend-item").forEach(item => {
+    const genre = item.dataset.genre;
 
-  const label = document.createElement("span");
-  label.textContent = genre;
-  label.style.fontSize = "0.55rem";
-  label.style.fontWeight = "500";
-  label.style.fontFamily = "'Playfair Display', serif";
+    item.addEventListener("mouseenter", () => {
+      lines
+        .attr("stroke-opacity", d => d.genre === genre ? 1 : 0.15)
+        .attr("stroke-width", d => d.genre === genre ? 3 : 1.2);
+    });
 
+    item.addEventListener("mouseleave", () => {
+      lines
+        .attr("stroke-opacity", 1)
+        .attr("stroke-width", 1.8);
+    });
 
-  row.appendChild(colorBox);
-  row.appendChild(label);
+    item.addEventListener("click", () => {
+      toggleGenre(genre);
 
-  // Description text
-  const desc = document.createElement("span");
-  desc.className = "legend-description";
-  desc.textContent = genreDescriptions[genre];
-  desc.style.fontSize = "0.55rem";
-  desc.style.opacity = "0.7";
-  desc.style.marginLeft = "16px"; // align with text
-  desc.style.fontFamily = "'Playfair Display', serif";
-
-  item.appendChild(row);
-  item.appendChild(desc);
-
-  legendContainer.appendChild(item);
-});
-
-// ------------------------------------
-// INTERACTION BINDINGS (HOVER + CLICK)
-// ------------------------------------
-document.querySelectorAll(".legend-item").forEach(item => {
-  const genre = item.dataset.genre;
-
-  // Hover highlight
-  item.addEventListener("mouseenter", () => {
-    lines
-      .attr("stroke-opacity", d => d.genre === genre ? 1 : 0.15)
-      .attr("stroke-width", d => d.genre === genre ? 3 : 1.2);
-  });
-
-  item.addEventListener("mouseleave", () => {
-    lines
-      .attr("stroke-opacity", 1)
-      .attr("stroke-width", 1.8);
-  });
-
-  // Click isolate
-  item.addEventListener("click", () => {
-    toggleGenre(genre);
-
-    // Sync legend appearance
-    document.querySelectorAll(".legend-item").forEach(el => {
-      el.style.opacity = (!activeGenre || el.dataset.genre === activeGenre) ? 1 : 0.3;
+      document.querySelectorAll(".legend-item").forEach(el => {
+        el.style.opacity = (!activeGenre || el.dataset.genre === activeGenre) ? 1 : 0.3;
+      });
     });
   });
-});
+
+}, 50); // END timeout
+
+}
+
 
 
   // ----------------------------
@@ -453,6 +453,5 @@ document.querySelectorAll(".legend-item").forEach(item => {
       el.style.opacity = (!activeGenre || el.dataset.genre === activeGenre) ? 1 : 0.3;
     });
   }
-}
 
 releaseTrends();
