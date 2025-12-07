@@ -295,7 +295,7 @@ const color = d3.scaleOrdinal()
     .attr("text-anchor", "middle")
     .style("font-size", "20px")
     .style("font-family", "'Playfair Display', serif")
-    .style("font-weight", "600")
+    .style("font-weight", "500")
     .style("fill", "var(--text-main)")
     .text("Genre Publication Trends on Goodreads (1980–2025)");
 
