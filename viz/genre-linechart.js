@@ -252,6 +252,17 @@ const color = d3.scaleOrdinal()
     .style("font-size", "12px")
     .style("fill", "var(--text-main)");
 
+  // X-axis label
+  g.append("text")
+    .attr("class", "axis-title")
+    .attr("x", (width - margin.left - margin.right) / 2)
+    .attr("y", height - margin.top - 5)
+    .attr("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("font-family", "'Playfair Display', serif")
+    .style("fill", "var(--text-main)")
+    .text("Publication Year");
+
   const yAxis = g.append("g").call(d3.axisLeft(y));
 
   // STYLE Y-AXIS TEXT
@@ -259,6 +270,18 @@ const color = d3.scaleOrdinal()
     .style("font-family", "'Playfair Display', serif")
     .style("font-size", "12px")
     .style("fill", "var(--text-main)");
+
+  // Y-axis label
+  g.append("text")
+    .attr("class", "axis-title")
+    .attr("x", -((height - margin.top - margin.bottom) / 2))
+    .attr("y", -40)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("font-family", "'Playfair Display', serif")
+    .style("fill", "var(--text-main)")
+    .text("Publication Count");
 
   // ----------------------------
   // TITLE
@@ -314,14 +337,14 @@ const genreDescriptions = {
 Object.assign(legendContainer.style, {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
-  gap: "8px 15px",
+  gap: "5px 12px",
   width: "100%",
-  padding: "10px",
+  padding: "8px",
   overflow: "visible",
   background: "var(--legend-color)",  
   border: "2px solid var(--primary)",
   borderRadius: "8px",
-  marginTop: "15px"
+  marginTop: "12px"
 });
 
 // Build each legend entry
@@ -358,8 +381,10 @@ top25.forEach(genre => {
 
   const label = document.createElement("span");
   label.textContent = genre;
-  label.style.fontSize = "0.5rem";
+  label.style.fontSize = "0.55rem";
   label.style.fontWeight = "500";
+  label.style.fontFamily = "'Playfair Display', serif";
+
 
   row.appendChild(colorBox);
   row.appendChild(label);
@@ -367,10 +392,11 @@ top25.forEach(genre => {
   // Description text
   const desc = document.createElement("span");
   desc.className = "legend-description";
-  desc.textContent = genreDescriptions[genre] || "";
-  desc.style.fontSize = "0.5rem";
+  desc.textContent = genreDescriptions[genre];
+  desc.style.fontSize = "0.55rem";
   desc.style.opacity = "0.7";
-  desc.style.marginLeft = "19px"; // align with text
+  desc.style.marginLeft = "16px"; // align with text
+  desc.style.fontFamily = "'Playfair Display', serif";
 
   item.appendChild(row);
   item.appendChild(desc);

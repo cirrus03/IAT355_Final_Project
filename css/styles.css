@@ -38,10 +38,6 @@ body {
     background-color: var(--background);
 }
 
-.text-spacing {
-    margin-top: 1rem;
-
-}
 .book-container {
     display: flex;
     flex-direction: column;
@@ -129,8 +125,8 @@ body {
 /*Back faces*/
 .back {
     transform-origin: left;
-    border-left: 15px solid var(--primary);
-    border-right: 3px solid var(--primary);
+    border-right: 15px solid var(--primary);
+    border-left: 3px solid var(--primary);
 }
 
 .back, .front {
@@ -169,14 +165,13 @@ h1, h2, h3, h4{
 p {
   font-family: "Playfair", serif;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 label {
     font-family: "Playfair", serif;
     font-weight: 500;
     font-size: 1rem;
-
 }
 
 
@@ -198,6 +193,10 @@ label {
     background-color: lightgray;
     border: 1px solid gray;
     height: 100%;
+}
+
+.text-spacing {
+    padding-top: 1rem !important;
 }
 
 
