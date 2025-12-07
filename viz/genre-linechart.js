@@ -140,14 +140,16 @@ const color = d3.scaleOrdinal()
     .curve(d3.curveMonotoneX);
 
   // ----------------------------
-  // TOOLTIP
+  // TOOLTIP styling
   // ----------------------------
   const tooltip = d3.select("body")
     .append("div")
     .style("position", "absolute")
     .style("padding", "6px 10px")
-    .style("background", "white")
-    .style("border", "1px solid #ccc")
+    .style("background", "var(--legend-color)")
+    .style("border", "1px solid var(--secondary)")
+    .style("color", "var(--text-main)")
+    .style("font-family", "'Playfair Display', serif")
     .style("border-radius", "4px")
     .style("opacity", 0)
     .style("pointer-events", "none")
@@ -222,7 +224,7 @@ const color = d3.scaleOrdinal()
         .html(`
           <strong>${d.genre}</strong><br>
           Year: ${closest.year}<br>
-          Trend: ${closest.smooth?.toFixed(1)}
+          Total books: ${closest.smooth?.toFixed(1)}
         `)
         .style("left", event.pageX + 15 + "px")
         .style("top", event.pageY - 20 + "px");
@@ -281,7 +283,7 @@ const color = d3.scaleOrdinal()
     .style("font-size", "14px")
     .style("font-family", "'Playfair Display', serif")
     .style("fill", "var(--text-main)")
-    .text("Publication Count");
+    .text("Number of Books Published");
 
   // ----------------------------
   // TITLE
@@ -295,7 +297,7 @@ const color = d3.scaleOrdinal()
     .style("font-family", "'Playfair Display', serif")
     .style("font-weight", "600")
     .style("fill", "var(--text-main)")
-    .text("Publication Trends – Top 25 Genres");
+    .text("Genre Publication Trends on Goodreads (1980–2025)");
 
 // ------------------------------------
 // FINAL 2-COLUMN LEGEND WITH DESCRIPTIONS + INTERACTIONS
@@ -342,7 +344,7 @@ Object.assign(legendContainer.style, {
   padding: "8px",
   overflow: "visible",
   background: "var(--legend-color)",  
-  border: "2px solid var(--secondary)",
+  border: "1px solid var(--secondary)",
   borderRadius: "8px",
   marginTop: "12px"
 });

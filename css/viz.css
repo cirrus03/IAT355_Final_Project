@@ -1,19 +1,5 @@
 @import url("styles.css");
 
-.tooltip {
-  position: absolute;
-  background: var(--tooltips);
-  color: var(--secondary);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 10px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.1s ease-out;
-  white-space: nowrap;
-  z-index: 99; 
-}
-
 .styled-dropdown {
   padding: .5rem .5rem;
   font-size: 12px;
