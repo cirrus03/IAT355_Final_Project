@@ -41,7 +41,10 @@ const stopwords = new Set([
 ]);
 
 
-// TEXT CLEANING + TOKENIZER
+
+// =====================================================================
+// TOKENIZER + BIGRAM MAKER (UNCHANGED)
+// =====================================================================
 function tokenize(text) {
   return text
     .split(/[\s.]+/g)
@@ -62,79 +65,102 @@ function makeBigrams(tokens) {
 }
 
 
-function WordCloud(freqWords, {
-  width = 500,
-  height = 500,
-  maxWords = 100,
-  fontScale = .8,
-  padding = 2,
-  rotate = () => 0,
-  fill = "steelblue",
-  selector = "#wordcloud"
+
+// =====================================================================
+// COMBINED WORDCLOUD FUNCTION
+// =====================================================================
+function CombinedWordCloud(low, high, {
+  width = 550,
+  height = 570,
+  maxWords = 75,
+  padding = 4,
+  selector = "#wordcloud_combined"
 } = {}) {
 
-  // Compute frequencies
-  const freq = d3.rollups(freqWords, v => v.length, d => d)
-    .sort((a, b) => d3.descending(a[1], b[1]))
-    .slice(0, maxWords)
-    .map(([text, size]) => ({ text, size }));
+  // take 100 from each + inject color into objects
+    const combined = [
 
-  // Clear any previous cloud
+    ...high.slice(0, maxWords).map(d => ({
+      text: d.text,
+      size: d.size,
+      color: "#2E8B57"    // green for high ratings
+    })),
+
+    ...low.slice(0, maxWords).map(d => ({
+      text: d.text,
+      size: d.size,
+      color: "#C63737"    // red for low ratings
+    }))
+  ];
+
+  // dynamic font scale across datasets
+  const sizeScale = d3.scaleLinear()
+    .domain([d3.min(combined, d => d.size), d3.max(combined, d => d.size)])
+    .range([10, 40]);
+
+  // clear existing SVG
   d3.select(selector).html("");
 
-  // Create SVG container
   const svg = d3.select(selector)
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
-  // Build cloud layout — FIXED: use d3.layout.cloud()
+  // layout with combined word list
   d3.layout.cloud()
     .size([width, height])
-    //.words(freq)
-    .words(freqWords)
+    .words(combined.map(w => ({
+      text: w.text,
+      size: sizeScale(w.size),
+      color: w.color
+    })))
     .padding(padding)
-    .rotate(rotate)
-    .font("sans-serif")
-    .fontSize(d => Math.sqrt(d.size) * fontScale)
+    .rotate(() => (Math.random() > 0.8 ? 90 : 0))
+    .font("Playfair Display")
+    .fontSize(d => d.size)
     .on("end", draw)
     .start();
 
-  // Render words onto SVG
-  function draw(freqWords) {
+  // ⭐ draw words w/ combined colors
+  function draw(words) {
     svg.append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`)
+      .attr("transform", `translate(${width/2}, ${height/2})`)
       .selectAll("text")
-      .data(freqWords)
+      .data(words)
       .enter()
       .append("text")
-        .style("font-size", d => `${d.size}px`)
-        .style("fill", fill)
+        .style("font-family", "Playfair Display")
+        .style("font-size", d => d.size + "px")
+        .style("fill", d => d.color)   
         .attr("text-anchor", "middle")
-        .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
+        .attr("transform", d =>
+          `translate(${d.x},${d.y}) rotate(${d.rotate})`
+        )
         .text(d => d.text);
   }
 }
 
+// =====================================================================
+// MAIN FUNCTION TO LOAD DATA AND INITIALIZE VISUALIZATIONS
+// =====================================================================
 async function initWordCloud() {
   try {
     const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
 
-    console.log("Columns:", Object.keys(reviews[0]));
-
-    // --- FILTER 1: High-rated reviews (4.4–5) ---
+    // High-rated reviews (UNCHANGED logic)
     const highRated = reviews.filter(d => +d.review_rating_n >= 4.4);
 
-    // --- FILTER 2: Low-rated reviews (< 3) ---
-    const lowRated = reviews.filter(d => +d.review_rating_n < 2);
+    // Low-rated reviews (UNCHANGED logic)
+    const lowRated  = reviews.filter(d => +d.review_rating_n < 2);
 
-    console.log("Total reviews:", reviews.length);
-    console.log("High-rated reviews:", highRated.length);
-    console.log("Low-rated reviews:", lowRated.length);
+    const n = Math.min(highRated.length, lowRated.length);
+    const highSample = highRated.slice(0, n);
+    const lowSample  = lowRated.slice(0, n);
 
-    // ---- PROCESS FUNCTION (shared by both clouds) ----
-    function processReviews(reviewArray) {
-      const allText = reviewArray.map(d => d.review_content_clean).join(" ");
+
+    // --- PROCESS FUNCTION
+    function processReviews(arr) {
+      const allText = arr.map(d => d.review_content_clean).join(" ");
       const tokens = tokenize(allText);
       const bigrams = makeBigrams(tokens);
 
@@ -144,72 +170,18 @@ async function initWordCloud() {
         .map(([text, size]) => ({ text, size }));
     }
 
-    // --- BIGRAM FREQUENCY LISTS ---
-    const bigramsHigh = processReviews(highRated);
-    const bigramsLow  = processReviews(lowRated);
+    // compute bigrams
+      const bigramsLow  = processReviews(lowSample);
+      const bigramsHigh = processReviews(highSample);
 
-    console.log("Top high-rated bigrams:", bigramsHigh.slice(0, 10));
-    console.log("Top low-rated bigrams:", bigramsLow.slice(0, 10));
-
-    // --- RENDER BOTH WORD CLOUDS ---
-    WordCloud(bigramsHigh, {
-      selector: "#wordcloud_high",
-      fill: "steelblue"
-    });
-
-    WordCloud(bigramsLow, {
-      selector: "#wordcloud_low",
-      fill: "crimson",
-      fontScale: 1.2
+    //combined cloud
+    CombinedWordCloud( bigramsLow, bigramsHigh, {
+      selector: "#wordcloud_combined"
     });
 
   } catch (err) {
     console.error("Error loading CSV:", err);
   }
 }
-
-initWordCloud();
-
-
-{/*async function initWordCloud() {
-  try {
-    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
-
-    console.log("Columns:", Object.keys(reviews[0]));
-
-    // --- FILTER: Only reviews from books rated 4.4–5 ---
-    const filtered = reviews.filter(d => +d.review_rating_n >= 4.4);
-
-    console.log("Total reviews:", reviews.length);
-    console.log("Filtered reviews (4.2-5 stars):", filtered.length);
-
-    // --- Combine review text from only high-rated books ---
-    const allText = filtered
-      .map(d => d.review_content_clean)
-      .join(" ");
-
-    // --- Single tokens ---
-    const tokens = tokenize(allText);
-    console.log("Token count:", tokens.length);
-
-    // --- Build BIGRAMS ONLY ---
-    const bigrams = makeBigrams(tokens);
-    console.log("Total bigrams:", bigrams.length);
-
-    // --- Compute bigram frequencies ---
-    const bigramFreq = d3.rollups(bigrams, v => v.length, d => d)
-      .sort((a, b) => d3.descending(a[1], b[1]))  // sort by frequency
-      .slice(0, 200)                              // TOP 200 BIGRAMS
-      .map(([text, size]) => ({ text, size }));   // format for cloud
-
-    console.log("Top bigrams:", bigramFreq.slice(0, 10));
-
-    // --- Build word cloud using ONLY bigrams ---
-    WordCloud(bigramFreq);
-
-  } catch (err) {
-    console.error("Error loading CSV:", err);
-  }
-} */}
 
 initWordCloud();

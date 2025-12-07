@@ -1,0 +1,73 @@
+@import url("styles.css");
+
+.styled-dropdown {
+  padding: .5rem .5rem;
+  font-size: 12px;
+  font-family: "Playfair", serif;
+  border: 1px solid var(--secondary);
+  border-radius: 6px;
+  background-color: var(--tooltips);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.styled-dropdown:hover {
+  border-color: #aaa;
+}
+
+.styled-dropdown:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 4px (--accent);
+}
+
+#chart {
+  background-color: #f8f4ec;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#genre-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2rem;
+  row-gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.legend-color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+#wordcloud_combined {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+#wordcloud-title {
+  font-size: 20px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
