@@ -9,6 +9,7 @@
   --page-background: #F8F5F0;
   --text-main: #2C6E49;
   --text-secondary: #353535;
+  --legend-color: white;
 }
 
 * {
@@ -37,6 +38,10 @@ body {
     background-color: var(--background);
 }
 
+.text-spacing {
+    margin-top: 1rem;
+
+}
 .book-container {
     display: flex;
     flex-direction: column;
@@ -107,8 +112,8 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+   /* justify-content: center;
+    align-items: center;*/
 
     padding: 1rem;
 }
