@@ -333,7 +333,7 @@ const genreDescriptions = {
 };
 
 
-// Force layout
+// Legend layout
 Object.assign(legendContainer.style, {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
@@ -342,7 +342,7 @@ Object.assign(legendContainer.style, {
   padding: "8px",
   overflow: "visible",
   background: "var(--legend-color)",  
-  border: "2px solid var(--primary)",
+  border: "2px solid var(--secondary)",
   borderRadius: "8px",
   marginTop: "12px"
 });
