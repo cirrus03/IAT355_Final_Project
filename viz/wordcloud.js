@@ -121,7 +121,7 @@ function CombinedWordCloud(low, high, {
     .on("end", draw)
     .start();
 
-  // ⭐ NEW — draw words w/ combined colors
+  // ⭐ draw words w/ combined colors
   function draw(words) {
     svg.append("g")
       .attr("transform", `translate(${width/2}, ${height/2})`)
