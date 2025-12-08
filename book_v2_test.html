@@ -16,6 +16,7 @@
     <script src="./scripts/main.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
+    <script src="./viz/rating-scatterplot.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
@@ -74,7 +75,8 @@
                 </div>
                 <div class="back">
                     <div id="b2" class="back-content">
-                        <h1>Back 2</h1>
+                        <h2>Chapter 1: Do Ratings Reflect Reach?</h2>
+                        
                     </div>
                 </div>
             </div>
@@ -83,6 +85,13 @@
             <div id="p3" class="paper">
                 <div class="front">
                     <div id="f3" class="front-content">
+                        <div class="chart-wrapper">
+                            <div class="scatter-toggle">
+                                <button data-mode="popularity" class="mode-btn active">Popularity</button>
+                                <button data-mode="engagement" class="mode-btn">Engagement</button>
+                            </div>
+                            <div id="rating-scatter"></div>
+                            </div>
                     </div>
                 </div>
                 <div class="back">
