@@ -18,20 +18,31 @@
     <script src="./viz/genre-linechart.js" defer></script>
     <script src="./viz/rating-scatterplot.js" defer></script>
     <script src="./viz/year-linechart.js" defer></script>
+    <script src="./viz/author-vis.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="css/navbar.css">
 
 
 </head>
 <body>
-
-    <nav>
-        <a href="index.html">Mango</a>
-        <a  href="team.html">Team</a>
-        <a href="citations.html">Citations</a>
-    </nav>
+<nav>
+    <ul>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
+        <div class="right-aligned">
+            <li>
+                <a href="book_v2_test.html">Visualization</a>
+            </li>
+            <li>
+                <a href="team.html">Team</a>
+            </li>
+        </div>
+    </ul>
+</nav>
 
     <div class="book-mobile mobile-size">
         <div class="page">
@@ -148,7 +159,15 @@
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b3" class="back-content">                    
+                    <div id="b3" class="back-content author-content">  
+                         <h2>Chapter 3: Top Rated Authors</h2>
+                        <p class="text-spacing">So yeah, there's a bias towards newer released. However, that does not necessarily mean that the ratings are totally, irrevocably skewed towards newer releases. When looking at authors in our dataset who hold the most number of total reviews, there’s actually a decent mix of both pre and post goodreads popularity spike.</p>
+                        <p class="text-spacing">That being said, of the top 8 authors, the top 4 are all from the post-goodreads boom. Click the legend or the points on the graph to isolate certain authors' works.</p>
+                        <p class="text-spacing">While there isn’t a strong correlation between top rate authors and publication year, it is certainly interesting to note the sheer scale of certain book ratings. Take Twilight by Stephanie Meyer – even amongst the top 8 authors' works, it’s leagues above the rest. It makes you wonder – if goodreads existed during the 20th century, would a book like 1984 or Animal Farm be the number one?</p>
+                        <!-- authors vis legend box -->
+                        <div id="legend-container">
+                            <div class="legend-item"></div>
+                        </div>                  
                     </div>
                 </div>
             </div>
@@ -156,7 +175,10 @@
             <!-- Paper 4 -->
             <div id="p4" class="paper inactive">
                 <div class="front">
-                    <div id="f4" class="front-content">
+                    <div id="f4" class="front-content  author-content">
+                        <!-- author vis -->
+                        <div id="author-chart"></div>
+                        <div class="author-tooltip" id="author-tooltip"></div>
                     </div>
                 </div>
 
