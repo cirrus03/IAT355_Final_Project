@@ -276,16 +276,27 @@ svg text {
   letter-spacing: normal !important;
 }
 
-.author-tooltip {
-    /* position: absolute;
-    padding: 5px;
-    font-size: 12px;
-    visibility: hidden;
+#legend-container {
+    margin-top: 1rem;
+    background-color: var(--legend-color);
+}
+
+.legend-item text {
     font-family: "Playfair Display", serif;
-    background: var(--legend-color);
-    color: var(--text-main);
-    border: 1px solid var(--secondary); */
-    background: var(--legend-color);
+    fill: var(--text-main);
+}
+
+/* .legend-item {
+    
+} */
+
+svg text {
+  font-family: "Playfair Display", serif;
+  fill: var(--text-main);
+}
+
+.author-tooltip {
+  background: var(--legend-color);
   color: var(--text-main);
   border: 1px solid var(--secondary);
   padding: 6px 10px;
