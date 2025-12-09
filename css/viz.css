@@ -69,6 +69,58 @@
 
 
 
+/* author vis */
+.author-content {
+    padding: 0.5rem;
+}
+/* .author-chart {
+    padding: 0.5 0.5 1 1;
+} /
+
+
+/ author vis content /
+.axis text, 
+.tick text, 
+svg text {
+  font-family: sans-serif !important;
+  font-variant-numeric: normal !important;
+  font-feature-settings: "tnum" off, "lnum" off !important;
+  letter-spacing: normal !important;
+}
+
+#legend-container {
+    margin-top: 1rem;
+    background-color: var(--legend-color);
+}
+
+.legend-item text {
+    font-family: "Playfair Display", serif;
+    fill: var(--text-main);
+}
+
+/ .legend-item {
+
+} */
+
+svg text {
+  font-family: "Playfair Display", serif;
+  fill: var(--text-main);
+  font-family: 'Playfair Display', serif !important;
+}
+
+
+.author-tooltip {
+  background: var(--legend-color);
+  color: var(--text-main);
+  border: 1px solid var(--secondary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: "Playfair Display", serif;
+  font-size: 12px;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
 
 
 

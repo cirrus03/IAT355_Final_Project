@@ -169,6 +169,11 @@ body {
 #p5 { z-index: 2; }
 #p6 { z-index: 1; }
 
+/* make sure buttons are on top always */
+.button-container {
+    z-index: 1000;
+}
+
 h1 {
     color: var(--background);
     font-family: "Playfair Display", serif;
@@ -247,6 +252,10 @@ label {
   pointer-events: none;
   transition: opacity 0.1s ease;
 }
+
+
+
+
 
 
 
