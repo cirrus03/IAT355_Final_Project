@@ -293,7 +293,9 @@ svg text {
 svg text {
   font-family: "Playfair Display", serif;
   fill: var(--text-main);
+  font-family: 'Playfair Display', serif !important;
 }
+
 
 .author-tooltip {
   background: var(--legend-color);
