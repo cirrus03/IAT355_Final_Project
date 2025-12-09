@@ -16,20 +16,35 @@
     <script src="./scripts/main.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
+    <script src="./viz/line_authors.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Playfair+Display+SC&display=swap" rel="stylesheet">
 
 
 </head>
+
 <body>
 
-    <nav>
-        <a href="index.html">Mango</a>
-        <a  href="team.html">Team</a>
-        <a href="citations.html">Citations</a>
-    </nav>
+<nav>
+    <ul>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
+        <div class="right-aligned">
+            <li>
+                <a href="book_v2_test.html">Visualization</a>
+            </li>
+            <li>
+                <a href="team.html">Team</a>
+            </li>
+        </div>
+    </ul>
+</nav>
 
     <div class="book-mobile mobile-size">
         <div class="page">
@@ -40,6 +55,11 @@
         </div>
         <div class="page">
             <h1>engagement</h1>
+        </div>
+        <div class="page">
+            <h1>authors</h1>
+            <!-- <div id="legend-container"></div> -->
+            <!-- <div id="author-chart"></div> -->
         </div>
         <div class="page">
             <h1>wordcloudk</h1>
@@ -66,23 +86,31 @@
             </div>
 
             <!-- Paper 2 -->
-            <div id="p2" class="paper">
+            <div id="p2" class="paper inactive">
                 <div class="front">
                     <div id="f2" class="front-content">
                         <h1>Front 2</h1>
                     </div>
                 </div>
-                <div class="back">
-                    <div id="b2" class="back-content">
+                <div class="back inactive">
+                    <div id="b2" class="back-content ">
                         <h1>Back 2</h1>
+                        <p class="text-spacing">someting something</p>
+                        <p class="text-spacing">someting something</p>
+                        <!-- authors vis legend box -->
+                        <div id="legend-container"></div> 
                     </div>
                 </div>
             </div>
             
             <!-- Paper 3 -->
-            <div id="p3" class="paper">
+            <div id="p3" class="paper ">
                 <div class="front">
-                    <div id="f3" class="front-content">
+                    <div id="f3" class="front-content author-content">
+                        <!-- author vis -->
+                         
+                         <div id="author-chart"></div>
+                         <div class="author-tooltip" id="author-tooltip"></div>
                     </div>
                 </div>
                 <div class="back">
