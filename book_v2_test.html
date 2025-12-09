@@ -17,6 +17,7 @@
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
     <script src="./viz/rating-scatterplot.js" defer></script>
+    <script src="./viz/year-linechart.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
@@ -113,7 +114,8 @@
                 </div>
                 <div class="back">
                     <div id="b3" class="back-content">
-                        
+                    <h2>Chapter 2: </h2>
+  
                     </div>
                 </div>
             </div>
@@ -122,7 +124,16 @@
             <div id="p4" class="paper inactive">
                 <div class="front">
                     <div id="f4" class="front-content">
-            
+                        <div class="chart-wrapper">
+                            <div class="year-toggle">
+                                <button class="year-mode-btn" data-mode="popularity">Popularity</button>
+                                <button class="year-mode-btn" data-mode="engagement">Engagement</button>
+                            </div>
+                            <div id="year-trends"></div>
+                            
+                            <!-- Zoomed-in detail chart -->
+                            <div id="year-zoom"></div>
+                        </div>
                     </div>
                 </div>
 
