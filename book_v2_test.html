@@ -17,6 +17,8 @@
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
     <script src="./viz/line_authors.js" defer></script>
+    <script src="./viz/rating-scatterplot.js" defer></script>
+    <script src="./viz/year-linechart.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
@@ -80,7 +82,25 @@
                 </div>
                 <div class="back">
                     <div id="b1" class="back-content">
-                        <h1>Back 1</h1>
+                        <h2>Chapter 1: Do Ratings Reflect Reach?</h2>
+                        <p class="text-spacing">Goodreads is built on the idea that a simple star rating can represent the value of a book, but when almost every book sits between 3.5 and 4.5 stars, the star system begins to lose meaning. When high scores become the default rather than a reward, the difference between good, great, and forgettable becomes almost impossible to see.</p>                   
+                        <p class="text-spacing">To dig deeper, we compared star ratings against two more grounded indicators of reader response:</p>
+                        <ul>
+                            <li><strong>Popularity</strong> – total number of ratings</li>
+                            <li><strong>Engagement</strong> – total number of written reviews</li>
+                        </ul>
+                        <p class="text-spacing">Use the visualizations on the right to toggle between “Popularity” and “Engagement”, and hover over each point to explore how individual books compare.</p>
+
+                        <h4 class="text-spacing">Popularity vs. Average Rating</h4>
+                        <p class="text-spacing">The more people rate a book, the rating barely changes. Even massively popular titles stick within the same narrow star range as niche books. Popularity seems stable — but that stability isn’t necessarily honesty. It may reflect how easy it is to tap five stars and move on.</p>
+                        <p class="text-spacing">If a quick rating is simple, then stars reflect participation more than thoughtful opinion.</p>
+                        
+                        <h4 class="text-spacing">Engagement vs. Average Rating</h4>
+                        <p class="text-spacing">Written reviews take effort — which means stronger feelings surface. Books with higher engagement show slightly more variation: some beloved hits rise, and a few truly controversial ones fall.</p>
+                        <p class="text-spacing">When people actually think before scoring, we finally see some disagreement. That suggests: Reviews reveal nuance. Ratings hide it.</p>
+                        
+                        <h4 class="text-spacing">So, is the star system broken?</h4>
+                        <p class="text-spacing">Not completely — but it’s not telling the truth. The consistent inflation means stars can’t help you separate: a book you’ll genuinely love from a book you’ll forget tomorrow. These charts serve as a reminder: If every book looks “good,” how do you decide what’s actually worth reading?</p>                    
                     </div>
                 </div>
             </div>
@@ -89,7 +109,13 @@
             <div id="p2" class="paper inactive">
                 <div class="front">
                     <div id="f2" class="front-content">
-                        <h1>Front 2</h1>
+                        <div class="chart-wrapper">
+                            <div class="scatter-toggle">
+                                <button data-mode="popularity" class="mode-btn active">Popularity</button>
+                                <button data-mode="engagement" class="mode-btn">Engagement</button>
+                            </div>
+                            <div id="rating-scatter"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="back inactive">
@@ -114,8 +140,7 @@
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b3" class="back-content">
-                        
+                    <div id="b3" class="back-content">                    
                     </div>
                 </div>
             </div>
@@ -124,7 +149,6 @@
             <div id="p4" class="paper inactive">
                 <div class="front">
                     <div id="f4" class="front-content">
-            
                     </div>
                 </div>
 
