@@ -209,7 +209,7 @@ async function yearTrends() {
       .transition()
       .duration(600)
       .attr("fill", "none")
-      .attr("stroke", "var(--text-main)")
+      .attr("stroke","var(--secondary)")
       .attr("stroke-width", 2)
       .attr("d", line);
 
@@ -222,7 +222,7 @@ async function yearTrends() {
       .enter()
       .append("circle")
       .attr("r", 3)
-      .attr("fill", "var(--text-main)");
+      .attr("fill", "var(--secondary)");
 
     const allPts = ptsEnter.merge(pts);
 
@@ -364,7 +364,7 @@ async function yearTrends() {
         .transition()
         .duration(400)
         .attr("fill", "none")
-        .attr("stroke", "var(--text-main)")
+        .attr("stroke", "var(--secondary)")
         .attr("stroke-width", 2)
         .attr("d", zoomLine);
 
@@ -376,7 +376,7 @@ async function yearTrends() {
         .enter()
         .append("circle")
         .attr("r", 3)
-        .attr("fill", "var(--text-main)");
+        .attr("fill", "var(--secondary)");
 
     zEnter.merge(zPts)
         .transition()
