@@ -52,6 +52,8 @@ body {
     align-items: center;
     justify-content: center;
     /* margin-bottom: 0.5rem; */
+
+    z-index: 1000;
 }
 
 .button-container button {
@@ -256,9 +258,43 @@ label {
   transition: opacity 0.1s ease;
 }
 
+.author-content {
+    padding: 0.5rem;
+}
+/* .author-chart {
+    padding: 0.5 0.5 1 1;
+} */
 
 
+/* author vis content */
+.axis text, 
+.tick text, 
+svg text {
+  font-family: sans-serif !important;
+  font-variant-numeric: normal !important;
+  font-feature-settings: "tnum" off, "lnum" off !important;
+  letter-spacing: normal !important;
+}
 
+.author-tooltip {
+    /* position: absolute;
+    padding: 5px;
+    font-size: 12px;
+    visibility: hidden;
+    font-family: "Playfair Display", serif;
+    background: var(--legend-color);
+    color: var(--text-main);
+    border: 1px solid var(--secondary); */
+    background: var(--legend-color);
+  color: var(--text-main);
+  border: 1px solid var(--secondary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: "Playfair Display", serif;
+  font-size: 12px;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
 
 @media (width <= 48rem) {
     .desktop-size {
@@ -280,6 +316,16 @@ label {
     /* don't display mobile book */
     .mobile-size {
         display: none;
+    }
+
+    /* change spacing of author vis */
+    .author-content {
+    padding-bottom: 5rem;
+    }
+
+    /* change title size of author chart */
+    #author-chart svg .chart-title {
+        font-size: 0.5rem;
     }
 }
 

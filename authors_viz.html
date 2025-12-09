@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scatter Plot with D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    svg {
+      background-color: #f9f9f9;
+    }
+    .author-tooltip {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      font-size: 12px;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1>Top Authors Scatter Plot</h1>
+  <div id="chart"></div> <!-- This is where the scatter plot will go -->
+
+  <!-- Tooltip div -->
+  <div class="author-tooltip" id="author-tooltip"></div>
+
+  <div id="legend-container"></div>
+
+   <!-- <select id="author-select">
+      <option value="">Select an Author</option>
+    </select> -->
+
+  <script src="viz/line_authors.js"></script>
+</body>
+</html>
