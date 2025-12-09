@@ -202,7 +202,7 @@ h2, h3, h4{
     color: var(--background)
 }
 
-p, ul {
+p, ul, li {
   font-family: "Playfair", serif;
   font-weight: 400;
   font-size: 0.8rem;
