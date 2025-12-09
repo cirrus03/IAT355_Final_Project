@@ -202,15 +202,10 @@ h2, h3, h4{
     color: var(--background)
 }
 
-p, ul {
+p {
   font-family: "Playfair", serif;
   font-weight: 400;
   font-size: 0.8rem;
-}
-
-ul {
-    color: var(--text-main);
-    padding-left: 20px;
 }
 
 label {
