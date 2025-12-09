@@ -1,5 +1,5 @@
 // --------------------------------------------------
-// GLOBAL TOGGLE FUNCTION (unchanged)
+// GLOBAL TOGGLE FUNCTION
 // --------------------------------------------------
 let activeGenre = null;
 
