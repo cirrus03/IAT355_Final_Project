@@ -16,37 +16,22 @@
     <script src="./scripts/main.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
-    <script src="./viz/line_authors.js" defer></script>
     <script src="./viz/rating-scatterplot.js" defer></script>
     <script src="./viz/year-linechart.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
     <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="./css/navbar.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Playfair+Display+SC&display=swap" rel="stylesheet">
 
 
 </head>
-
 <body>
 
-<nav>
-    <ul>
-        <li>
-            <a href="index.html">Home</a>
-        </li>
-        <div class="right-aligned">
-            <li>
-                <a href="book_v2_test.html">Visualization</a>
-            </li>
-            <li>
-                <a href="team.html">Team</a>
-            </li>
-        </div>
-    </ul>
-</nav>
+    <nav>
+        <a href="index.html">Mango</a>
+        <a  href="team.html">Team</a>
+        <a href="citations.html">Citations</a>
+    </nav>
 
     <div class="book-mobile mobile-size">
         <div class="page">
@@ -57,11 +42,6 @@
         </div>
         <div class="page">
             <h1>engagement</h1>
-        </div>
-        <div class="page">
-            <h1>authors</h1>
-            <!-- <div id="legend-container"></div> -->
-            <!-- <div id="author-chart"></div> -->
         </div>
         <div class="page">
             <h1>wordcloudk</h1>
@@ -106,7 +86,7 @@
             </div>
 
             <!-- Paper 2 -->
-            <div id="p2" class="paper inactive">
+            <div id="p2" class="paper">
                 <div class="front">
                     <div id="f2" class="front-content">
                         <div class="chart-wrapper">
@@ -118,29 +98,57 @@
                         </div>
                     </div>
                 </div>
-                <div class="back inactive">
-                    <div id="b2" class="back-content ">
-                        <h1>Back 2</h1>
-                        
+                <div class="back">
+                    <div id="b2" class="back-content">
+                    <h2>Chapter 2: How Goodreads’ Growth Shaped Ratings</h2>
+                    <p class="text-spacing">When looking at ratings alone, it's easy to assume that book quality determines visibility. But when we map publication year against engagement and popularity, a different pattern emerges:</p>                   
+                    <p class="text-spacing">Books released during Goodreads’ rise receive disproportionately higher visibility — regardless of critical or literary significance.</p>
+                    <p class="text-spacing">Use the toggle on the right to view:</p>
+                    <ul>
+                        <li><strong>Publication Year vs. Popularity</strong> – total number of ratings</li>
+                        <li><strong>Publication Year vs. Engagement</strong> – total number of written reviews</li>
+                    </ul>
+                    <p class="text-spacing">Hover over each point to explore how books from different eras perform on Goodreads today.</p>
+                    
+                    <h4 class="text-spacing">Why Timing Matters</h4>
+                    <p class="text-spacing">Goodreads launched in 2007, and its user base exploded between 2012–2016, largely driven by:</p>
+                    <ul>
+                        <li>The John Green Era — YA fiction surge, Tumblr culture, and book fandom communities</li>
+                        <li>Social reading becoming social media</li>
+                        <li>Goodreads acquisition by Amazon, increasing reach</li>
+                        <li>Smartphone adoption and app-enabled reviewing</li>   
+                    </ul>
+                    <p class="text-spacing">Books aligned with these moments weren’t just read — they were shared, rated, and ritualized. Not necessarily because they were better, but because they circulated during the platform’s cultural peak.</p>
+                    <p class="text-spacing">Works from earlier decades — even classics — accrue slower engagement simply because:</p>
+                    <ul>
+                        <li>They predate the platform</li>
+                        <li>Their initial conversations happened offline</li>
+                        <li>Their audiences may not be active Goodreads users</li>
+                        <li>Their reputations were shaped academically, not socially</li>   
+                    </ul>                    
+                    <p class="text-spacing">This introduces a <strong>temporal bias:</strong> quality is evaluated retroactively by the size of the audience that exists after the book was published.</p>
                     </div>
                 </div>
             </div>
             
             <!-- Paper 3 -->
-            <div id="p3" class="paper ">
+            <div id="p3" class="paper">
                 <div class="front">
-                    <div id="f3" class="front-content author-content">
-               
-                         
-     
+                    <div id="f3" class="front-content">
+                        <div class="chart-wrapper">
+                            <div class="year-toggle">
+                                <button class="year-mode-btn" data-mode="popularity">Popularity</button>
+                                <button class="year-mode-btn" data-mode="engagement">Engagement</button>
+                            </div>
+                            <div id="year-trends"></div>
+                            
+                            <!-- Zoomed-in detail chart -->
+                            <div id="year-zoom"></div>
+                        </div>    
                     </div>
                 </div>
                 <div class="back">
-                    <div id="b3" class="back-content author-content">
-                        <p class="text-spacing">someting something</p>
-                        <p class="text-spacing">someting something</p>
-                        <!-- authors vis legend box -->
-                        <div id="legend-container"></div>                  
+                    <div id="b3" class="back-content">                    
                     </div>
                 </div>
             </div>
@@ -148,10 +156,7 @@
             <!-- Paper 4 -->
             <div id="p4" class="paper inactive">
                 <div class="front">
-                    <div id="f4" class="front-content author-content">
-                        <!-- author vis -->
-                        <div id="author-chart"></div>
-                        <div class="author-tooltip" id="author-tooltip"></div>
+                    <div id="f4" class="front-content">
                     </div>
                 </div>
 
