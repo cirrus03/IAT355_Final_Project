@@ -102,18 +102,121 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="m-page" id="m-p2">
             <h2>Page 2</h2>
 
-            <div class="text-content"></div>
-            <div class="vis-coontext"></div>
+            <div class="text-content">
+                <h2>Chapter 2: How Goodreads’ Growth Shaped Ratings</h2>
+                <p class="text-spacing">When looking at ratings alone, it's easy to assume that book quality determines visibility. But
+                    when we map publication year against engagement and popularity, a different pattern emerges:</p>
+                <p class="text-spacing">Books released during Goodreads’ rise receive disproportionately higher visibility — regardless
+                    of critical or literary significance.</p>
+                <p class="text-spacing">Use the toggle on the right to view:</p>
+                <ul>
+                    <li><strong>Publication Year vs. Popularity</strong> – total number of ratings</li>
+                    <li><strong>Publication Year vs. Engagement</strong> – total number of written reviews</li>
+                </ul>
+                <p class="text-spacing">Hover over each point to explore how books from different eras perform on Goodreads today.</p>
+                
+                <h4 class="text-spacing">Why Timing Matters</h4>
+                <p class="text-spacing">Goodreads launched in 2007, and its user base exploded between 2012–2016, largely driven by:</p>
+                <ul>
+                    <li>The John Green Era — YA fiction surge, Tumblr culture, and book fandom communities</li>
+                    <li>Social reading becoming social media</li>
+                    <li>Goodreads acquisition by Amazon, increasing reach</li>
+                    <li>Smartphone adoption and app-enabled reviewing</li>
+                </ul>
+                <p class="text-spacing">Books aligned with these moments weren’t just read — they were shared, rated, and ritualized.
+                    Not necessarily because they were better, but because they circulated during the platform’s cultural peak.</p>
+                <p class="text-spacing">Works from earlier decades — even classics — accrue slower engagement simply because:</p>
+                <ul>
+                    <li>They predate the platform</li>
+                    <li>Their initial conversations happened offline</li>
+                    <li>Their audiences may not be active Goodreads users</li>
+                    <li>Their reputations were shaped academically, not socially</li>
+                </ul>
+                <p class="text-spacing">This introduces a <strong>temporal bias:</strong> quality is evaluated retroactively by the size
+                    of the audience that exists after the book was published.</p>
+            </div>
+            <div class="vis-content">
+                <div class="chart-wrapper">
+                    <div class="year-toggle">
+                        <button class="year-mode-btn" data-mode="popularity">Popularity</button>
+                        <button class="year-mode-btn" data-mode="engagement">Engagement</button>
+                    </div>
+                    <div id="year-trends"></div>
+            
+                    <!-- Zoomed-in detail chart -->
+                    <div id="year-zoom"></div>
+                </div>
+            </div>
         </div>
+
         <div class="m-page" id="m-p3">
             <h2>Page 3</h2>
 
-            <div class="text-content"></div>
-            <div class="vis-coontext"></div>
+            <div class="text-content">
+                <h2>Chapter 3: Top Rated Authors</h2>
+                <p class="text-spacing">So yeah, there's a bias towards newer released. However, that does not necessarily mean that
+                    the ratings are totally, irrevocably skewed towards newer releases. When looking at authors in our dataset who
+                    hold the most number of total reviews, there’s actually a decent mix of both pre and post goodreads popularity
+                    spike.</p>
+                <p class="text-spacing">That being said, of the top 8 authors, the top 4 are all from the post-goodreads boom. Click
+                    the legend or the points on the graph to isolate certain authors' works.</p>
+                <p class="text-spacing">While there isn’t a strong correlation between top rate authors and publication year, it is
+                    certainly interesting to note the sheer scale of certain book ratings. Take Twilight by Stephanie Meyer – even
+                    amongst the top 8 authors' works, it’s leagues above the rest. It makes you wonder – if goodreads existed during
+                    the 20th century, would a book like 1984 or Animal Farm be the number one?</p>
+                <!-- authors vis legend box -->
+                <div id="legend-container">
+                    <div class="legend-item"></div>
+                </div>
+            </div>
+            <div class="vis-content">
+                <div id="f4" class="author-content">
+                    <!-- author vis -->
+                    <div id="author-chart"></div>
+                    <div class="author-tooltip" id="author-tooltip"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-page" id="m-p4">
+            <div class="text-content">
+                <h2>Chapter 3: What genres and themes people seem to love?</h2>
+                <p class="text-spacing">Goodreads ratings often suggest that a “good” book is universally agreed upon, but the data
+                    tells a different story. When we look at the top 25 genres from 1980–2025, clear popularity cycles emerge:
+                    fantasy, adult fiction, romance, and mystery & crime experience massive spikes in the 2000s and early 2010s,
+                    reflecting mainstream cultural phenomena and large, active reader communities. Meanwhile, genres like world
+                    literature, classics, and religious & spiritual remain steady but far less visible—not because the books are
+                    lower quality, but because fewer users engage with them on the platform.</p>
+            
+                <p class="text-spacing">These differences reveal a core bias in how Goodreads defines what makes a book “good.”
+                    Highly active genre communities generate more reviews, drive up visibility, and shape the collective perception
+                    of quality. As a result, Goodreads ratings often reflect popularity more than literary value, amplifying
+                    dominant genres while pushing quieter categories to the margins. Understanding these patterns helps us interpret
+                    ratings more critically and recognize that a book’s worth extends beyond the trends that happen to dominate a
+                    given era.</p>
+            
+                <h4 class="text-spacing">Genre Legend</h4>
+                <div id="genre-legend" class="genre-legend-container"></div>
+            </div>
+            <div class="vis-content">
+                <div id="chart"></div>
+            </div>
+        </div>
+
+        <div class="m-page" id="m-p5">
+            <div class="text-content">
+                <h2>Epilogue: </h2>
+                        <p class="text-spacing">As we close this exploration, we invite you to look at Goodreads ratings with curiosity rather than certainty. The trends and patterns across our visualizations reveal that popularity, timing, genre cycles, and author reputation all shape how a book is received. These biases don’t make the books themselves “bad,” but they do influence what appears to be a “good” review.</p>
+                        <p class="text-spacing">The word cloud brings together both high and low-rated language to remind us to pause and consider: What matters most to you as a reader? Are you discovering books through your own lens, or riding with the crowd? Consider these biases, but don’t let the numbers speak louder than your experience. The value of a book begins long before and far beyond the stars beside its name.</p>
+            </div>
+            <div class="vis-content">
+                <h4 id="wordcloud-title">High vs Low Bigram's from Reviews</h4>
+                <div id="wordcloud_combined"></div>
+            </div>
         </div>
 
         <div class="m-page" id="b-cover">
