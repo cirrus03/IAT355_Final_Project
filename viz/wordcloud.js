@@ -41,72 +41,86 @@ const stopwords = new Set([
 ]);
 
 
-
 // =====================================================================
-// TOKENIZER + BIGRAM MAKER (UNCHANGED)
+// TOKENIZER + BIGRAM MAKER
 // =====================================================================
 function tokenize(text) {
   return text
     .split(/[\s.]+/g)
-    .map(w => w.replace(/^[“‘"\-—()\[\]{}]+/g, ""))
-    .map(w => w.replace(/[;:.!?()\[\]{},"'’”\-—]+$/g, ""))
-    .map(w => w.replace(/['’]s$/g, ""))
-    .map(w => w.substring(0, 30))
+    .map(w => w.replace(/^[“‘"\-—()\[\]{}]+/g, ""))         // leading punctuation
+    .map(w => w.replace(/[;:.!?()\[\]{},"'’”\-—]+$/g, ""))  // trailing punctuation
+    .map(w => w.replace(/['’]s$/g, ""))                    // possessives
+    .map(w => w.substring(0, 30))                          // clamp length
     .map(w => w.toLowerCase())
     .filter(w => w && !stopwords.has(w));
 }
 
 function makeBigrams(tokens) {
-  const bigrams = [];
+  const arr = [];
   for (let i = 0; i < tokens.length - 1; i++) {
-    bigrams.push(tokens[i] + " " + tokens[i + 1]);
+    arr.push(tokens[i] + " " + tokens[i + 1]);
   }
-  return bigrams;
+  return arr;
 }
 
 
 
 // =====================================================================
-// COMBINED WORDCLOUD FUNCTION
+// ⭐ RESPONSIVE COMBINED WORD CLOUD
 // =====================================================================
 function CombinedWordCloud(low, high, {
-  width = 550,
-  height = 570,
+  selector = "#wordcloud_combined",
   maxWords = 75,
-  padding = 4,
-  selector = "#wordcloud_combined"
+  padding = 4
 } = {}) {
 
-  // take 100 from each + inject color into objects
-    const combined = [
+  // -------------------------------
+  // 1. GET RESPONSIVE CONTAINER SIZE
+  // -------------------------------
+  const container = document.querySelector(selector);
 
+  const width  = container.clientWidth  || 550;
+  const height = container.clientHeight * 1.1 || 550;
+
+  // -------------------------------
+  // 2. MERGE WORDS & ASSIGN COLORS
+  // -------------------------------
+  const combined = [
     ...high.slice(0, maxWords).map(d => ({
       text: d.text,
       size: d.size,
-      color: "#2E8B57"    // green for high ratings
+      color: "#2E8B57"  // green
     })),
-
     ...low.slice(0, maxWords).map(d => ({
       text: d.text,
       size: d.size,
-      color: "#C63737"    // red for low ratings
+      color: "#C63737"  // red
     }))
   ];
 
-  // dynamic font scale across datasets
+  // dynamic font scale
   const sizeScale = d3.scaleLinear()
-    .domain([d3.min(combined, d => d.size), d3.max(combined, d => d.size)])
+    .domain([
+      d3.min(combined, d => d.size),
+      d3.max(combined, d => d.size)
+    ])
     .range([10, 40]);
 
-  // clear existing SVG
+  // -------------------------------
+  // 3. CLEAR OLD CLOUD + CREATE SVG
+  // -------------------------------
   d3.select(selector).html("");
 
   const svg = d3.select(selector)
     .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", "100%")             // responsive width
+    .attr("height", height)            // height stays in px
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .style("overflow", "visible");
 
-  // layout with combined word list
+  // -------------------------------
+  // 4. RUN WORD LAYOUT
+  // -------------------------------
   d3.layout.cloud()
     .size([width, height])
     .words(combined.map(w => ({
@@ -121,45 +135,47 @@ function CombinedWordCloud(low, high, {
     .on("end", draw)
     .start();
 
-  // ⭐ draw words w/ combined colors
+  // -------------------------------
+  // 5. DRAW WORDS
+  // -------------------------------
   function draw(words) {
     svg.append("g")
-      .attr("transform", `translate(${width/2}, ${height/2})`)
+      .attr("transform", `translate(${width / 2}, ${height / 2})`)
       .selectAll("text")
       .data(words)
       .enter()
       .append("text")
         .style("font-family", "Playfair Display")
         .style("font-size", d => d.size + "px")
-        .style("fill", d => d.color)   
+        .style("fill", d => d.color)
         .attr("text-anchor", "middle")
-        .attr("transform", d =>
-          `translate(${d.x},${d.y}) rotate(${d.rotate})`
+        .attr("transform", d => 
+          `translate(${d.x}, ${d.y}) rotate(${d.rotate})`
         )
         .text(d => d.text);
   }
 }
 
+
+
 // =====================================================================
-// MAIN FUNCTION TO LOAD DATA AND INITIALIZE VISUALIZATIONS
+// ⭐ MAIN INITIALIZER
 // =====================================================================
 async function initWordCloud() {
   try {
     const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
 
-    // High-rated reviews (UNCHANGED logic)
-    const highRated = reviews.filter(d => +d.review_rating_n >= 4.4);
+    // high/low ratings
+    const highRated = reviews.filter(r => +r.review_rating_n >= 4.4);
+    const lowRated  = reviews.filter(r => +r.review_rating_n < 2);
 
-    // Low-rated reviews (UNCHANGED logic)
-    const lowRated  = reviews.filter(d => +d.review_rating_n < 2);
-
+    // equal-size samples
     const n = Math.min(highRated.length, lowRated.length);
     const highSample = highRated.slice(0, n);
     const lowSample  = lowRated.slice(0, n);
 
-
-    // --- PROCESS FUNCTION
-    function processReviews(arr) {
+    // process function
+    const processReviews = arr => {
       const allText = arr.map(d => d.review_content_clean).join(" ");
       const tokens = tokenize(allText);
       const bigrams = makeBigrams(tokens);
@@ -168,19 +184,19 @@ async function initWordCloud() {
         .sort((a, b) => d3.descending(a[1], b[1]))
         .slice(0, 200)
         .map(([text, size]) => ({ text, size }));
-    }
+    };
 
-    // compute bigrams
-      const bigramsLow  = processReviews(lowSample);
-      const bigramsHigh = processReviews(highSample);
+    // compute final lists
+    const bigramsLow  = processReviews(lowSample);
+    const bigramsHigh = processReviews(highSample);
 
-    //combined cloud
-    CombinedWordCloud( bigramsLow, bigramsHigh, {
+    // draw responsive cloud
+    CombinedWordCloud(bigramsLow, bigramsHigh, {
       selector: "#wordcloud_combined"
     });
 
   } catch (err) {
-    console.error("Error loading CSV:", err);
+    console.error("Error loading wordcloud CSV:", err);
   }
 }
 

@@ -33,8 +33,8 @@ async function releaseTrends() {
   // Load container & compute responsive width/height
   const container = document.getElementById("chart");
   const width = container.clientWidth;
-  const height = width * 0.9; // aspect ratio
-  const margin = { top: 40, right: 50, bottom: 40, left: 50 };
+  const height = width * 1.1; // aspect ratio
+  const margin = { top: 30, right: 20, bottom: 40, left: 40 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
