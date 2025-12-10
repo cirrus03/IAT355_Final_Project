@@ -16,8 +16,13 @@
     <script src="./scripts/main.js" defer></script>
     <script src="./viz/wordcloud.js" defer></script>
     <script src="./viz/genre-linechart.js" defer></script>
+
     <script src="./viz/rating-scatterplot.js" defer></script>
+    <script src="./viz/rating-scatterplot-mobile.js" defer></script>
+
     <script src="./viz/year-linechart.js" defer></script>
+    <script src="./viz/year-linechart-mobile.js" defer></script>
+
     <script src="./viz/author-vis.js" defer></script>
 
     <!-- CSS files -->
@@ -86,11 +91,11 @@
                         <p class="text-spacing">If a quick rating is simple, then stars reflect participation more than thoughtful opinion.</p>
                         
                         <h4 class="text-spacing">Engagement vs. Average Rating</h4>
-                        <p class="text-spacing">Written reviews take effort — which means stronger feelings surface. Books with higher engagement show slightly more variation: some beloved hits rise, and a few truly controversial ones fall.</p>
+                        <p class="text-spacing">Written reviews take effort, which means stronger feelings surface. Books with higher engagement show slightly more variation: some beloved hits rise, and a few truly controversial ones fall.</p>
                         <p class="text-spacing">When people actually think before scoring, we finally see some disagreement. That suggests: Reviews reveal nuance. Ratings hide it.</p>
                         
                         <h4 class="text-spacing">So, is the star system broken?</h4>
-                        <p class="text-spacing">Not completely — but it’s not telling the truth. The consistent inflation means stars can’t help you separate: a book you’ll genuinely love from a book you’ll forget tomorrow. These charts serve as a reminder: If every book looks “good,” how do you decide what’s actually worth reading?</p>  
+                        <p class="text-spacing">It's not completely broken, but it’s not telling the truth. The consistent inflation means stars can’t help you separate: a book you’ll genuinely love from a book you’ll forget tomorrow. These charts serve as a reminder: If every book looks “good,” how do you decide what’s actually worth reading?</p>  
             </div>
             <div class="vis-content">
                 <div class="chart-wrapper">
@@ -98,7 +103,7 @@
                         <button data-mode="popularity" class="mode-btn active">Popularity</button>
                         <button data-mode="engagement" class="mode-btn">Engagement</button>
                     </div>
-                    <div id="rating-scatter"></div>
+                    <div id="rating-scatter-mobile"></div>
                 </div>
             </div>
         </div>
@@ -141,19 +146,19 @@
             </div>
             <div class="vis-content">
                 <div class="chart-wrapper">
-                    <div class="year-toggle">
+                    <div class="year-toggle-mobile">
                         <button class="year-mode-btn" data-mode="popularity">Popularity</button>
                         <button class="year-mode-btn" data-mode="engagement">Engagement</button>
                     </div>
-                    <div id="year-trends"></div>
+                    <div id="year-trends-mobile"></div>
             
-                    <!-- Zoomed-in detail chart -->
-                    <div id="year-zoom"></div>
+            
+                    <div id="year-zoom-mobile"></div>
                 </div>
             </div>
         </div>
 
-        <div class="m-page" id="m-p3">
+        <!-- <div class="m-page" id="m-p3">
             <h2>Page 3</h2>
 
             <div class="text-content">
@@ -168,21 +173,21 @@
                     certainly interesting to note the sheer scale of certain book ratings. Take Twilight by Stephanie Meyer – even
                     amongst the top 8 authors' works, it’s leagues above the rest. It makes you wonder – if goodreads existed during
                     the 20th century, would a book like 1984 or Animal Farm be the number one?</p>
-                <!-- authors vis legend box -->
+  
                 <div id="legend-container">
                     <div class="legend-item"></div>
                 </div>
             </div>
             <div class="vis-content">
                 <div id="f4" class="author-content">
-                    <!-- author vis -->
+                  
                     <div id="author-chart"></div>
                     <div class="author-tooltip" id="author-tooltip"></div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="m-page" id="m-p4">
+        <!-- <div class="m-page" id="m-p4">
             <div class="text-content">
                 <h2>Chapter 3: What genres and themes people seem to love?</h2>
                 <p class="text-spacing">Goodreads ratings often suggest that a “good” book is universally agreed upon, but the data
@@ -205,9 +210,9 @@
             <div class="vis-content">
                 <div id="chart"></div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="m-page" id="m-p5">
+        <!-- <div class="m-page" id="m-p5">
             <div class="text-content">
                 <h2>Epilogue: </h2>
                         <p class="text-spacing">As we close this exploration, we invite you to look at Goodreads ratings with curiosity rather than certainty. The trends and patterns across our visualizations reveal that popularity, timing, genre cycles, and author reputation all shape how a book is received. These biases don’t make the books themselves “bad,” but they do influence what appears to be a “good” review.</p>
@@ -217,7 +222,7 @@
                 <h4 id="wordcloud-title">High vs Low Bigram's from Reviews</h4>
                 <div id="wordcloud_combined"></div>
             </div>
-        </div>
+        </div> -->
 
         <div class="m-page" id="b-cover">
             <h2>back cover</h2>
