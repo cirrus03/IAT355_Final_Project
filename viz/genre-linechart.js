@@ -1,8 +1,9 @@
 // --------------------------------------------------
-// GLOBAL TOGGLE FUNCTION
+// TOGGLE STATE
 // --------------------------------------------------
 let activeGenre = null;
 
+// Toggle opacity + stroke width when a genre is clicked
 function toggleGenre(genre) {
   activeGenre = activeGenre === genre ? null : genre;
 
@@ -11,10 +12,10 @@ function toggleGenre(genre) {
       activeGenre && d.genre !== activeGenre ? 0.1 : 1
     )
     .attr("stroke-width", d =>
-      activeGenre && d.genre !== activeGenre ? 1.2 : 1.8
+      activeGenre && d.genre !== activeGenre ? 1.2 : 2.2
     );
 
-  // Adjust legend opacity
+  // Fade legend items that aren't selected
   document.querySelectorAll("#genre-legend .legend-item").forEach(el => {
     el.style.opacity =
       !activeGenre || el.dataset.genre === activeGenre ? 1 : 0.3;
@@ -22,11 +23,23 @@ function toggleGenre(genre) {
 }
 
 // --------------------------------------------------
-// MAIN FUNCTION
+// MAIN FUNCTION 
 // --------------------------------------------------
 async function releaseTrends() {
+  // Clear previous SVG + tooltip
+  d3.select("#chart").selectAll("*").remove();
+  d3.select("body").selectAll(".tooltip").remove();
+
+  // Load container & compute responsive width/height
+  const container = document.getElementById("chart");
+  const width = container.clientWidth;
+  const height = width * 0.9; // aspect ratio
+  const margin = { top: 40, right: 50, bottom: 40, left: 50 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
   // --------------------------------------------------
-  // LOAD CSV
+  // LOAD CSV + CLEAN DATA
   // --------------------------------------------------
   const raw = await d3.csv("./assets/book_details_with_mapped_genres_finals.csv");
 
@@ -38,9 +51,9 @@ async function releaseTrends() {
         ?.replace(/[\[\]']+/g, "")
         .split(",")
         .map(s => s.trim())
-        .filter(s => s.length > 0)
+        .filter(s => s)
     }))
-    .filter(d => d.year && d.year >= 1980 && d.year <= 2025);
+    .filter(d => d.year >= 1980 && d.year <= 2025);
 
   // --------------------------------------------------
   // FIND TOP 25 GENRES
@@ -52,12 +65,12 @@ async function releaseTrends() {
   );
 
   const top25 = Array.from(genreCounts.entries())
-    .sort((a, b) => d3.descending(a[1], b[1]))
+    .sort((a, b) => b[1] - a[1])
     .slice(0, 25)
     .map(([g]) => g);
 
   // --------------------------------------------------
-  // BUILD YEARLY COUNTS
+  // YEARLY COUNTS (SMOOTHED)
   // --------------------------------------------------
   const yearly = [];
   data.forEach(d => {
@@ -66,80 +79,58 @@ async function releaseTrends() {
     });
   });
 
-  const counts = d3
-    .rollups(
-      yearly,
-      v => v.length,
-      d => d.genre,
-      d => d.year
-    )
+  const counts = d3.rollups(
+    yearly,
+    v => v.length,
+    d => d.genre,
+    d => d.year
+  )
     .map(([genre, yearMap]) => {
-      const entries = Array.from(yearMap, ([year, count]) => ({
+      const arr = Array.from(yearMap, ([year, count]) => ({
         year: +year,
         count
-      }))
-        .filter(d => !Number.isNaN(d.year))
-        .sort((a, b) => a.year - b.year);
+      })).sort((a, b) => a.year - b.year);
 
-      // Moving average window = 5
-      entries.forEach((d, i) => {
-        const win = entries.slice(Math.max(0, i - 2), i + 3);
+      // 5-year moving average
+      arr.forEach((d, i) => {
+        const win = arr.slice(Math.max(0, i - 2), i + 3);
         d.smooth = d3.mean(win, x => x.count) || 0;
       });
 
-      return { genre, values: entries };
+      return { genre, values: arr };
     });
 
-  if (!counts.length) return;
-
   // --------------------------------------------------
-  // SVG SETUP
+  // SVG
   // --------------------------------------------------
-  const width = 610;
-  const height = 610;
-  const margin = { top: 40, right: 50, bottom: 40, left: 50 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-
   const svg = d3
     .select("#chart")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
-  svg
-    .insert("rect", ":first-child")
+  // inner background rectangle (your design)
+  svg.append("rect")
     .attr("x", margin.left)
     .attr("y", margin.top)
     .attr("width", innerWidth)
     .attr("height", innerHeight)
-    .attr("fill", "var(--page-background)")
-    .attr("pointer-events", "none");
+    .attr("fill", "var(--page-background)");
 
-  const g = svg
-    .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // --------------------------------------------------
   // SCALES
   // --------------------------------------------------
-  const x = d3
-    .scaleLinear()
-    .domain([1980, 2025])
-    .range([0, innerWidth]);
+  const x = d3.scaleLinear().domain([1980, 2025]).range([0, innerWidth]);
 
-  const yMax =
-    d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
-
-  const y = d3
-    .scaleLinear()
-    .domain([0, yMax])
-    .nice()
-    .range([innerHeight, 0]);
+  const yMax = d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
+  const y = d3.scaleLinear().domain([0, yMax]).range([innerHeight, 0]).nice();
 
   // --------------------------------------------------
-  // COLOR PALETTE (unchanged)
-// --------------------------------------------------
+  // COLORS
+  // --------------------------------------------------
   const genreColors = [
     "#E77D62", "#345463", "#FF9E89", "#8A6B82", "#3C8A61",
     "#6F8FA0", "#A7849F", "#C4644C", "#DFAE7A", "#245E3D",
@@ -147,50 +138,29 @@ async function releaseTrends() {
     "#9EC3B0", "#D9C9D6", "#F5F2E4", "#67495F", "#5FAF83",
     "#F5CFA0", "#4F6F80", "#7BAA98", "#D4E7D6", "#8F674F"
   ];
-
-  const color = d3
-    .scaleOrdinal()
-    .domain(top25)
-    .range(genreColors);
+  const color = d3.scaleOrdinal().domain(top25).range(genreColors);
 
   // --------------------------------------------------
   // LINE GENERATOR
   // --------------------------------------------------
-  const line = d3
-    .line()
+  const line = d3.line()
     .x(d => x(d.year))
     .y(d => y(d.smooth))
     .curve(d3.curveMonotoneX);
 
   // --------------------------------------------------
-  // TOOLTIP + HOVER ELEMENTS
+  // TOOLTIP
   // --------------------------------------------------
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("position", "fixed")
-    .style("opacity", 0)
     .style("pointer-events", "none")
-    .style("z-index", 999999999);
-  
-
-  const hoverLine = g
-    .append("line")
-    .attr("stroke", "#555")
-    .attr("stroke-width", 1)
-    .attr("y1", 0)
-    .attr("y2", innerHeight)
-    .style("opacity", 0)
-    .style("pointer-events", "none");
-
-  const hoverDots = g
-    .append("g")
-    .style("opacity", 0)
-    .style("pointer-events", "none");
+    .style("opacity", 0);
 
   // --------------------------------------------------
-  // DRAW LINES (visual only)
-// --------------------------------------------------
+  // DRAW LINES
+  // --------------------------------------------------
   g.selectAll(".genre-line")
     .data(counts)
     .join("path")
@@ -200,70 +170,66 @@ async function releaseTrends() {
     .attr("stroke-width", 1.8)
     .attr("d", d => line(d.values));
 
-  // Helper: closest point in a series for a given year
-  function closestByYear(values, year) {
+  // --------------------------------------------------
+  // HOVER ELEMENTS
+  // --------------------------------------------------
+  const hoverLine = g.append("line")
+    .attr("y1", 0)
+    .attr("y2", innerHeight)
+    .attr("stroke", "#444")
+    .style("opacity", 0);
+
+  const hoverDots = g.append("g").style("opacity", 0);
+
+  function closest(values, yr) {
     return values.reduce((a, b) =>
-      Math.abs(b.year - year) < Math.abs(a.year - year) ? b : a
+      Math.abs(b.year - yr) < Math.abs(a.year - yr) ? b : a
     );
   }
 
-  // --------------------------------------------------
-  // OVERLAY RECT FOR HOVER
-  // --------------------------------------------------
   g.append("rect")
-    .attr("class", "hover-overlay")
     .attr("width", innerWidth)
     .attr("height", innerHeight)
-    .attr("fill", "none")
-    .attr("pointer-events", "all")
+    .attr("fill", "transparent")
     .on("mousemove", (event) => {
-      const [mx, my] = d3.pointer(event, g.node());
-      const hoveredYear = Math.round(x.invert(mx));
+      const [mx, my] = d3.pointer(event);
+      const year = Math.round(x.invert(mx));
 
-      const points = counts.map(series => {
-        const pt = closestByYear(series.values, hoveredYear);
+      const pts = counts.map(s => {
+        const p = closest(s.values, year);
         return {
-          genre: series.genre,
-          year: pt.year,
-          smooth: pt.smooth,
-          x: x(pt.year),
-          yVal: y(pt.smooth)
+          genre: s.genre,
+          year: p.year,
+          smooth: p.smooth,
+          x: x(p.year),
+          y: y(p.smooth)
         };
       });
 
-      // nearest line vertically to mouse
-      const nearest = points.reduce((a, b) =>
-        Math.abs(b.yVal - my) < Math.abs(a.yVal - my) ? b : a
+      const nearest = pts.reduce((a, b) =>
+        Math.abs(b.y - my) < Math.abs(a.y - my) ? b : a
       );
 
-      // vertical hover line
       hoverLine
-        .attr("x1", x(hoveredYear))
-        .attr("x2", x(hoveredYear))
-        .style("opacity", 0.8);
+        .attr("x1", x(year))
+        .attr("x2", x(year))
+        .style("opacity", 1);
 
-      // dots for all series
-      hoverDots
-        .selectAll("circle")
-        .data(points, d => d.genre)
+      hoverDots.selectAll("circle")
+        .data(pts)
         .join("circle")
-        .attr("r", 3.5)
         .attr("cx", d => d.x)
-        .attr("cy", d => d.yVal)
+        .attr("cy", d => d.y)
+        .attr("r", 3.2)
         .attr("fill", d => color(d.genre));
 
       hoverDots.style("opacity", 1);
 
-      // tooltip for nearest series
       tooltip
         .style("opacity", 1)
-        .html(
-          `<strong>${nearest.genre}</strong><br>` +
-            `Year: ${nearest.year}<br>` +
-            `Total books: ${nearest.smooth.toFixed(1)}`
-        )
-        .style("left", (event.clientX + 15) + "px")
-        .style("top", (event.clientY - 20) + "px");
+        .html(`<strong>${nearest.genre}</strong><br>Year: ${nearest.year}<br>Books: ${nearest.smooth.toFixed(1)}`)
+        .style("left", event.clientX + 12 + "px")
+        .style("top", event.clientY - 28 + "px");
     })
     .on("mouseout", () => {
       hoverLine.style("opacity", 0);
@@ -271,22 +237,16 @@ async function releaseTrends() {
       tooltip.style("opacity", 0);
     })
     .on("click", (event) => {
-      const [mx, my] = d3.pointer(event, g.node());
-      const clickedYear = Math.round(x.invert(mx));
+      const [mx, my] = d3.pointer(event);
+      const year = Math.round(x.invert(mx));
 
-      const points = counts.map(series => {
-        const pt = closestByYear(series.values, clickedYear);
-        return {
-          genre: series.genre,
-          year: pt.year,
-          smooth: pt.smooth,
-          x: x(pt.year),
-          yVal: y(pt.smooth)
-        };
+      const pts = counts.map(s => {
+        const p = closest(s.values, year);
+        return { genre: s.genre, y: y(p.smooth) };
       });
 
-      const nearest = points.reduce((a, b) =>
-        Math.abs(b.yVal - my) < Math.abs(a.yVal - my) ? b : a
+      const nearest = pts.reduce((a, b) =>
+        Math.abs(b.y - my) < Math.abs(a.y - my) ? b : a
       );
 
       toggleGenre(nearest.genre);
@@ -296,45 +256,49 @@ async function releaseTrends() {
   // AXES
   // --------------------------------------------------
   g.append("g")
-    .attr("transform", `translate(0, ${innerHeight})`)
-    .call(d3.axisBottom(x).ticks(9).tickFormat(d3.format("d")));
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(
+      d3.axisBottom(x)
+        .ticks(width < 500 ? 5 : 9)
+        .tickFormat(d3.format("d"))
+    );
 
   g.append("g").call(d3.axisLeft(y));
 
   // --------------------------------------------------
-  // TITLE & LABELS
+  // TITLES
   // --------------------------------------------------
   g.append("text")
     .attr("x", innerWidth / 2)
-    .attr("y", -15)
+    .attr("y", -12)
     .attr("text-anchor", "middle")
-    .style("font-size", "20px")
-    .style("font-family", "'Playfair Display', serif")
-    .style("font-weight", "500")
+    .text("Genre Publication Trends on Goodreads (1980–2025)")
+    .style("font-size", width < 500 ? "14px" : "18px")
     .style("fill", "var(--text-main)")
-    .text("Genre Publication Trends on Goodreads (1980–2025)");
+    .style("font-family", "'Playfair Display', serif");
 
   g.append("text")
     .attr("x", innerWidth / 2)
     .attr("y", innerHeight + 30)
     .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("font-family", "'Playfair Display', serif")
+    .style("font-size", "13px")
     .style("fill", "var(--text-main)")
+    .style("font-family", "'Playfair Display', serif")
     .text("Publication Year");
 
   g.append("text")
-    .attr("transform", `rotate(-90)`)
+    .attr("transform", "rotate(-90)")
     .attr("x", -innerHeight / 2)
     .attr("y", -40)
     .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("font-family", "'Playfair Display', serif")
+    .style("font-size", "13px")
     .style("fill", "var(--text-main)")
+    .style("font-family", "'Playfair Display', serif")
     .text("Number of Books Published");
 
-  // --------------------------------------------------
-  // LEGEND (your descriptions kept exactly)
+
+ // --------------------------------------------------
+  // LEGEND STYLING + CONTENT
 // --------------------------------------------------
   const legendContainer = document.getElementById("genre-legend");
   legendContainer.innerHTML = "";
@@ -425,7 +389,7 @@ async function releaseTrends() {
     item.appendChild(desc);
     legendContainer.appendChild(item);
 
-    // Legend interactions
+
     item.addEventListener("mouseenter", () => {
       d3.selectAll(".genre-line")
         .attr("stroke-opacity", d => d.genre === genre ? 1 : 0.15)
@@ -440,9 +404,16 @@ async function releaseTrends() {
 
     item.addEventListener("click", () => toggleGenre(genre));
   });
-} // END releaseTrends()
+}
 
 // --------------------------------------------------
-// RUN FUNCTION
+// RUN + RESIZE LISTENER
 // --------------------------------------------------
 releaseTrends();
+
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => releaseTrends(), 150);
+});
+
