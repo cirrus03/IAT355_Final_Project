@@ -118,7 +118,6 @@ body {
    /* justify-content: center;
     align-items: center;*/
     padding: 1rem;
-    overflow-y: auto;
 }
 
 .front {
@@ -152,6 +151,8 @@ body {
 
 .back-content {
     transform: rotateY(180deg);
+        overflow-y: auto;
+
 }
 
 

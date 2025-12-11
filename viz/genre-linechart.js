@@ -82,6 +82,7 @@ async function releaseTrends() {
   "mystery & crime",
   "lgbtq+",
   "religious & spiritual",
+  "contemporary life", 
   "literature & classics", 
   "world literature", 
   "classics",
