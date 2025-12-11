@@ -1,6 +1,7 @@
 // --------------------------------------------------
 // TOGGLE STATE
 // --------------------------------------------------
+let activeGenres = new Map();
 let activeGenre = null;
 
 // Toggle opacity + stroke width when a genre is clicked
@@ -33,10 +34,19 @@ async function releaseTrends() {
   // Load container & compute responsive width/height
   const container = document.getElementById("chart");
   const width = container.clientWidth;
-  const height = width * 1.1; // aspect ratio
-  const margin = { top: 30, right: 20, bottom: 40, left: 40 };
+  const isMobile = width < 400;   // adjust breakpoint as needed
+
+  // Mobile-specific responsive height
+  const height = isMobile ? width * 1.3 : width * 1.1;
+
+  // Mobile margins (smaller but balanced)
+  const margin = isMobile
+    ? { top: 22, right: 10, bottom: 40, left: 35 }
+    : { top: 30, right: 20, bottom: 40, left: 40 };
+
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
+
 
   // --------------------------------------------------
   // LOAD CSV + CLEAN DATA
@@ -64,10 +74,43 @@ async function releaseTrends() {
     g => g
   );
 
-  const top25 = Array.from(genreCounts.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 25)
-    .map(([g]) => g);
+  const collapsedVisibleGenres = [
+  "fantasy",
+  "adult fiction",
+  "romance",
+  "paranormal & supernatural",
+  "mystery & crime",
+  "lgbtq+",
+  "religious & spiritual",
+  "literature & classics", 
+  "world literature", 
+  "classics",
+  "other / niche",
+];
+
+
+// Sort all genres by frequency
+const allGenresSorted = Array.from(genreCounts.entries())
+  .sort((a, b) => b[1] - a[1])
+  .map(([g]) => g);
+
+// Choose genres based on device
+let genresToUse;
+
+if (isMobile) {
+  // MOBILE --> show only collapsed visible genres
+  genresToUse = collapsedVisibleGenres.filter(g => allGenresSorted.includes(g));
+} else {
+  // DESKTOP → top 25
+  genresToUse = allGenresSorted.slice(0, 25);
+}
+
+const top25 = genresToUse;
+
+// Initialize visibility
+top25.forEach(g => activeGenres.set(g, true));
+
+
 
   // --------------------------------------------------
   // YEARLY COUNTS (SMOOTHED)
@@ -106,10 +149,12 @@ async function releaseTrends() {
   const svg = d3
     .select("#chart")
     .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .style("width", "100%")
+    .style("height", "auto");
 
-  // inner background rectangle (your design)
+
+  // inner background rectangle
   svg.append("rect")
     .attr("x", margin.left)
     .attr("y", margin.top)
@@ -161,14 +206,17 @@ async function releaseTrends() {
   // --------------------------------------------------
   // DRAW LINES
   // --------------------------------------------------
+  const countsFiltered = counts.filter(d => top25.includes(d.genre));
+
   g.selectAll(".genre-line")
-    .data(counts)
+    .data(countsFiltered)
     .join("path")
     .attr("class", "genre-line")
     .attr("fill", "none")
     .attr("stroke", d => color(d.genre))
-    .attr("stroke-width", 1.8)
-    .attr("d", d => line(d.values));
+    .attr("stroke-width", isMobile ? 1.2 : 1.8)
+    .attr("d", d => line(d.values))
+    .style("display", d => activeGenres.get(d.genre) ? "block" : "none");
 
   // --------------------------------------------------
   // HOVER ELEMENTS
@@ -220,16 +268,18 @@ async function releaseTrends() {
         .join("circle")
         .attr("cx", d => d.x)
         .attr("cy", d => d.y)
-        .attr("r", 3.2)
+        .attr("r", isMobile ? 2.4 : 3.2)
         .attr("fill", d => color(d.genre));
 
       hoverDots.style("opacity", 1);
 
+      const offsetX = isMobile ? 8 : 12;
+      const offsetY = isMobile ? 18 : 28;
       tooltip
         .style("opacity", 1)
         .html(`<strong>${nearest.genre}</strong><br>Year: ${nearest.year}<br>Books: ${nearest.smooth.toFixed(1)}`)
-        .style("left", event.clientX + 12 + "px")
-        .style("top", event.clientY - 28 + "px");
+        .style("left", event.clientX + offsetX + "px")
+        .style("top", event.clientY - offsetY + "px");
     })
     .on("mouseout", () => {
       hoverLine.style("opacity", 0);
@@ -273,7 +323,7 @@ async function releaseTrends() {
     .attr("y", -12)
     .attr("text-anchor", "middle")
     .text("Genre Publication Trends on Goodreads (1980–2025)")
-    .style("font-size", width < 500 ? "14px" : "18px")
+    .style("font-size", isMobile ? "12px" : "18px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif");
 
@@ -281,7 +331,7 @@ async function releaseTrends() {
     .attr("x", innerWidth / 2)
     .attr("y", innerHeight + 30)
     .attr("text-anchor", "middle")
-    .style("font-size", "13px")
+    .style("font-size", isMobile ? "10px" : "13px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif")
     .text("Publication Year");
@@ -291,23 +341,23 @@ async function releaseTrends() {
     .attr("x", -innerHeight / 2)
     .attr("y", -40)
     .attr("text-anchor", "middle")
-    .style("font-size", "13px")
+    .style("font-size", isMobile ? "10px" : "13px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif")
     .text("Number of Books Published");
 
 
- // --------------------------------------------------
+  // --------------------------------------------------
   // LEGEND STYLING + CONTENT
-// --------------------------------------------------
+  // --------------------------------------------------
   const legendContainer = document.getElementById("genre-legend");
   legendContainer.innerHTML = "";
   Object.assign(legendContainer.style, {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "5px 12px",
+    gridTemplateColumns: width < 350 ? "1fr" : "1fr 1fr",
+    gap: isMobile ? "4px 6px" : "5px 12px",
     width: "100%",
-    padding: "8px",
+    padding: isMobile ? "6px" : "8px",
     background: "var(--legend-color)",
     border: "1px solid var(--secondary)",
     borderRadius: "8px",
@@ -319,27 +369,27 @@ async function releaseTrends() {
     "adult fiction": "Fiction intended for mature readers, often with complex themes.",
     "romance": "Stories focused on relationships, attraction, and emotional intimacy.",
     "paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
-    "contemporary life": "Modern-day realistic stories about everyday experiences.",
     "mystery & crime": "Detective stories, investigations, and crime-solving.",
+    "lgbtq+": "Stories featuring queer identities, love, and themes.",
+    "religious & spiritual": "Faith-based, spiritual growth, or religious topics.",
+    "contemporary life": "Modern-day realistic stories about everyday experiences.",
     "historical fiction": "Stories set in real past historical periods.",
     "literature & classics": "Critically acclaimed works and timeless novels.",
+    "classics": "Canon literature with cultural significance.",
     "world literature": "Books originating from global cultures and languages.",
+    "other / niche": "Genres that don’t fit common categories.",
     "science fiction": "Speculative stories involving science, future tech, or space.",
     "adventure": "Action-driven stories with exploration or high-risk journeys.",
     "historical": "Nonfiction or fiction grounded heavily in history.",
     "kids & pre-teens": "Books written for children aged 8–12.",
     "horror": "Stories meant to scare, unsettle, or thrill.",
-    "other / niche": "Genres that don’t fit common categories.",
     "dark & erotic": "Mature stories exploring sensual or taboo topics.",
     "chick lit": "Lighthearted stories focusing on modern women’s lives.",
-    "classics": "Canon literature with cultural significance.",
     "comedy": "Humorous and lighthearted storytelling.",
     "dystopian": "Bleak future societies with oppressive control.",
     "ideas & growth": "Self-help, philosophy, and personal development.",
     "comics & manga": "Illustrated storytelling in comic or manga format.",
-    "lgbtq+": "Stories featuring queer identities, love, and themes.",
     "drama": "Emotionally intense character-driven stories.",
-    "religious & spiritual": "Faith-based, spiritual growth, or religious topics."
   };
 
   top25.forEach(genre => {
@@ -371,7 +421,7 @@ async function releaseTrends() {
 
     const label = document.createElement("span");
     label.textContent = genre;
-    label.style.fontSize = "0.55rem";
+    label.style.fontSize = isMobile ? "0.5rem" : "0.55rem";
     label.style.fontWeight = "500";
     label.style.fontFamily = "'Playfair Display', serif";
 
@@ -380,7 +430,7 @@ async function releaseTrends() {
 
     const desc = document.createElement("span");
     desc.textContent = genreDescriptions[genre] || "";
-    desc.style.fontSize = "0.55rem";
+    desc.style.fontSize = isMobile ? "0.45rem" : "0.55rem";
     desc.style.opacity = "0.7";
     desc.style.marginLeft = "16px";
     desc.style.fontFamily = "'Playfair Display', serif";
@@ -399,11 +449,42 @@ async function releaseTrends() {
     item.addEventListener("mouseleave", () => {
       d3.selectAll(".genre-line")
         .attr("stroke-opacity", 1)
-        .attr("stroke-width", 1.8);
+        .attr("stroke-width", isMobile ? 1.2 : 1.8)
     });
 
     item.addEventListener("click", () => toggleGenre(genre));
   });
+
+ {/* const showAllBtn = document.getElementById("show-all-btn");
+
+if (showAllBtn) {
+  showAllBtn.onclick = () => {
+    const allVisible = [...activeGenres.values()].every(v => v === true);
+
+    if (allVisible) {
+      // Hide all except the top 1 (or whatever)
+      top25.forEach((g, i) => {
+        activeGenres.set(g, i === 0); // only first stays visible
+      });
+      showAllBtn.textContent = "Show All Genres";
+    } else {
+      // Show everything
+      top25.forEach(g => activeGenres.set(g, true));
+      showAllBtn.textContent = "Show Less";
+    }
+
+    // Update the lines
+    d3.selectAll(".genre-line")
+      .style("display", d => activeGenres.get(d.genre) ? "block" : "none");
+
+    // Update legend opacity
+    document.querySelectorAll("#genre-legend .legend-item").forEach(el => {
+      const g = el.dataset.genre;
+      el.style.opacity = activeGenres.get(g) ? 1 : 0.35;
+    });
+  };
+} // end if showAllBtn */}
+
 }
 
 // --------------------------------------------------

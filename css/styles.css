@@ -118,8 +118,8 @@ body {
    /* justify-content: center;
     align-items: center;*/
     padding: 1rem;
+    overflow-y: auto;
 }
-
 
 .front {
     z-index: 1;
