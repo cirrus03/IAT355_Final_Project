@@ -70,9 +70,9 @@
 }
 
 /*button styling for show all genres*/
-/*#show-all-btn {
-  background: var(--primary);
-  color: white;
+button #show-all-btn {
+  background: var(--text-main);
+  color: var(--page-background);
   border: none;
   border-radius: 6px;
   padding: 6px 10px;
@@ -84,9 +84,7 @@
 
 #show-all-btn:hover {
   opacity: 0.85;
-} /*
-
-
+} 
 
 
 

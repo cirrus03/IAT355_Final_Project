@@ -3,6 +3,8 @@
 // --------------------------------------------------
 let activeGenres = new Map();
 let activeGenre = null;
+let lastMode = null;   // track mobile/desktop across redraws
+
 
 // Toggle opacity + stroke width when a genre is clicked
 function toggleGenre(genre) {
@@ -23,10 +25,12 @@ function toggleGenre(genre) {
   });
 }
 
+
 // --------------------------------------------------
 // MAIN FUNCTION 
 // --------------------------------------------------
 async function releaseTrends() {
+
   // Clear previous SVG + tooltip
   d3.select("#chart").selectAll("*").remove();
   d3.select("body").selectAll(".tooltip").remove();
@@ -34,10 +38,19 @@ async function releaseTrends() {
   // Load container & compute responsive width/height
   const container = document.getElementById("chart");
   const width = container.clientWidth;
-  const isMobile = width < 400;   // adjust breakpoint as needed
+  const isMobile = width < 450;   // adjust breakpoint as needed
 
   // Mobile-specific responsive height
-  const height = isMobile ? width * 1.3 : width * 1.1;
+  let height = isMobile ? width * 1.3 : width * 1.1;
+
+  // Determine the squareness of the container is
+  const aspect = width / height;
+
+  // If container is roughly square 
+  if (aspect > 0.9 && aspect < 1.2) {
+    // Apply your custom aspect ratio
+    height = width*.9;
+  }
 
   // Mobile margins (smaller but balanced)
   const margin = isMobile
@@ -75,41 +88,61 @@ async function releaseTrends() {
   );
 
   const collapsedVisibleGenres = [
-  "fantasy",
-  "adult fiction",
-  "romance",
-  "paranormal & supernatural",
-  "mystery & crime",
-  "lgbtq+",
-  "religious & spiritual",
-  "contemporary life", 
-  "literature & classics", 
-  "world literature", 
-  "classics",
-  "other / niche",
-];
+    "fantasy",
+    "adult fiction",
+    "romance",
+    "paranormal & supernatural",
+    "mystery & crime",
+    "lgbtq+",
+    "religious & spiritual",
+    "contemporary life",
+    "literature & classics",
+    "world literature",
+    "classics",
+    "other / niche",
+  ];
 
 
-// Sort all genres by frequency
-const allGenresSorted = Array.from(genreCounts.entries())
-  .sort((a, b) => b[1] - a[1])
-  .map(([g]) => g);
+  // Sort all genres by frequency
+  const allGenresSorted = Array.from(genreCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([g]) => g);
 
-// Choose genres based on device
-let genresToUse;
+  // Choose genres based on device
+  let genresToUse;
 
-if (isMobile) {
-  // MOBILE --> show only collapsed visible genres
-  genresToUse = collapsedVisibleGenres.filter(g => allGenresSorted.includes(g));
-} else {
-  // DESKTOP → top 25
-  genresToUse = allGenresSorted.slice(0, 25);
-}
+  if (isMobile) {
+    // MOBILE --> show only collapsed visible genres
+    genresToUse = collapsedVisibleGenres.filter(g => allGenresSorted.includes(g));
+  } else {
+    // DESKTOP → top 25
+    genresToUse = allGenresSorted.slice(0, 25);
+  }
 
-const top25 = genresToUse;
+  const top25 = genresToUse;
 
-// Initialize visibility
-top25.forEach(g => activeGenres.set(g, true));
+  // ---------------------------
+  // MODE TRANSITION HANDLER
+  // ---------------------------
+  const mode = isMobile ? "mobile" : "desktop";
+
+  if (lastMode === "mobile" && mode === "desktop") {
+    activeGenres = new Map();
+    top25.forEach(g => activeGenres.set(g, true));
+
+    const btn = document.getElementById("show-all-btn");
+    if (btn) btn.textContent = "Show Less";
+  }
+
+  lastMode = mode;
+
+  // Initialize visibility
+  if (activeGenres.size === 0 || mode === "desktop") {
+    activeGenres = new Map();
+    top25.forEach(g => activeGenres.set(g, true));
+  }
+
+
 
 
 
@@ -456,35 +489,71 @@ top25.forEach(g => activeGenres.set(g, true));
     item.addEventListener("click", () => toggleGenre(genre));
   });
 
- {/* const showAllBtn = document.getElementById("show-all-btn");
 
-if (showAllBtn) {
-  showAllBtn.onclick = () => {
-    const allVisible = [...activeGenres.values()].every(v => v === true);
+  const showAllBtn = document.getElementById("show-all-btn");
 
-    if (allVisible) {
-      // Hide all except the top 1 (or whatever)
-      top25.forEach((g, i) => {
-        activeGenres.set(g, i === 0); // only first stays visible
-      });
-      showAllBtn.textContent = "Show All Genres";
-    } else {
-      // Show everything
-      top25.forEach(g => activeGenres.set(g, true));
-      showAllBtn.textContent = "Show Less";
-    }
-
-    // Update the lines
-    d3.selectAll(".genre-line")
-      .style("display", d => activeGenres.get(d.genre) ? "block" : "none");
-
-    // Update legend opacity
-    document.querySelectorAll("#genre-legend .legend-item").forEach(el => {
-      const g = el.dataset.genre;
-      el.style.opacity = activeGenres.get(g) ? 1 : 0.35;
+  if (showAllBtn) {
+    Object.assign(showAllBtn.style, {
+      backgroundColor: "var(--primary)",
+      color: "var(--page-background)",
+      border: "none",
+      padding: "6px 8px",
+      borderRadius: "8px",
+      fontFamily: "'Playfair Display', serif",
+      fontWeight: "500",
+      fontSize: "0.8rem",
+      cursor: "pointer",
+      marginTop: "10px",
+      width: "fit-content",
+      alignSelf: "center",
+      transition: "all 0.2s ease",
+      display: isMobile ? "none" : "block", // keep your mobile logic
+      zIndex: 1000
     });
-  };
-} // end if showAllBtn */}
+
+    showAllBtn.onmouseenter = () => {
+      showAllBtn.style.backgroundColor = "var(--secondary)";
+    };
+    showAllBtn.onmouseleave = () => {
+      showAllBtn.style.backgroundColor = "var(--primary)";
+    };
+  }
+
+  if (showAllBtn) {
+
+    showAllBtn.onclick = () => {
+      const allVisible = [...activeGenres.values()].every(v => v === true);
+
+      if (allVisible) {
+        // ------------------------------------------
+        // SHOW LESS
+        // ------------------------------------------
+        top25.forEach(g => {
+          activeGenres.set(g, collapsedVisibleGenres.includes(g));
+        });
+
+        showAllBtn.textContent = "Show All Genres";
+
+      } else {
+        // ----------------------
+        // SHOW ALL
+        // ----------------------
+        top25.forEach(g => activeGenres.set(g, true));
+        showAllBtn.textContent = "Show Less";
+      }
+
+      // Update lines
+      d3.selectAll(".genre-line")
+        .style("display", d => activeGenres.get(d.genre) ? "block" : "none");
+
+      // Update legend opacity
+      document.querySelectorAll("#genre-legend .legend-item").forEach(el => {
+        const g = el.dataset.genre;
+        el.style.opacity = activeGenres.get(g) ? 1 : 0.3;
+      });
+    };
+
+  }
 
 }
 
