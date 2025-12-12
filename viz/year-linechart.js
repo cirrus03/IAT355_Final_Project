@@ -141,7 +141,7 @@ async function yearTrends() {
     .style("font-family", "'Playfair Display', serif")
     .style("font-weight", "500")
     .style("fill", "var(--text-main, #333)")
-    .text("Popularity / Engagement vs Publication Year");
+    .text("Newer Books Get More Ratings");
 
   // Tooltip
   const tooltip = d3.select("body")

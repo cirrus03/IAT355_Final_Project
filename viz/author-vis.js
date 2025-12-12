@@ -67,11 +67,11 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
       .attr("text-anchor", "middle")
       .attr("x", width / 2)
       .attr("y", margin.top - 16)
-      .style("font-size", "18px")
+      .style("font-size", "20px")
       .style("font-family", "'Playfair Display', serif")
       .style("font-weight", "500")
       .style("fill", "var(--text-main, #2C6E49)")
-      .text("Top Authors by Ratings Over Time");
+      .text("Reputation Isn’t Just for Modern Authors");
 
     // scales
     const x = d3.scaleLinear()
