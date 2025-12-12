@@ -14,8 +14,12 @@
 
     <!-- project scripts -->
     <script src="./scripts/main.js" defer></script>
+
     <script src="./viz/wordcloud.js" defer></script>
+    <script src="./viz/wordcloud-mobile.js" defer></script>
+
     <script src="./viz/genre-linechart.js" defer></script>
+    <script src="./viz/genre-linechart-mobile.js" defer></script>
 
     <script src="./viz/rating-scatterplot.js" defer></script>
     <script src="./viz/rating-scatterplot-mobile.js" defer></script>
@@ -51,20 +55,6 @@
 
 <!-- ----------------------mobile sizing visualizations ------------------------- -->
 
-    <!-- <div class="book-mobile mobile-size">
-        <div class="page">
-            <h1>What makes a good book</h1>
-        </div>
-        <div class="page">
-            <h1>genres</h1>
-        </div>
-        <div class="page">
-            <h1>engagement</h1>
-        </div>
-        <div class="page">
-            <h1>wordcloudk</h1>
-        </div>
-    </div> -->
 
     <div class="mobile-container mobile-size">
 
@@ -187,7 +177,7 @@
             </div>
         </div> -->
 
-        <!-- <div class="m-page" id="m-p4">
+        <div class="m-page" id="m-p4">
             <div class="text-content">
                 <h2>Chapter 3: What genres and themes people seem to love?</h2>
                 <p class="text-spacing">Goodreads ratings often suggest that a “good” book is universally agreed upon, but the data
@@ -205,24 +195,24 @@
                     given era.</p>
             
                 <h4 class="text-spacing">Genre Legend</h4>
-                <div id="genre-legend" class="genre-legend-container"></div>
+                <div id="genre-legend-mobile" class="genre-legend-container-mobile"></div>
             </div>
             <div class="vis-content">
-                <div id="chart"></div>
+                <div id="genre-chart-mobile"></div>
             </div>
-        </div> -->
+        </div>
 
-        <!-- <div class="m-page" id="m-p5">
+        <div class="m-page" id="m-p5">
             <div class="text-content">
                 <h2>Epilogue: </h2>
                         <p class="text-spacing">As we close this exploration, we invite you to look at Goodreads ratings with curiosity rather than certainty. The trends and patterns across our visualizations reveal that popularity, timing, genre cycles, and author reputation all shape how a book is received. These biases don’t make the books themselves “bad,” but they do influence what appears to be a “good” review.</p>
                         <p class="text-spacing">The word cloud brings together both high and low-rated language to remind us to pause and consider: What matters most to you as a reader? Are you discovering books through your own lens, or riding with the crowd? Consider these biases, but don’t let the numbers speak louder than your experience. The value of a book begins long before and far beyond the stars beside its name.</p>
             </div>
             <div class="vis-content">
-                <h4 id="wordcloud-title">High vs Low Bigram's from Reviews</h4>
-                <div id="wordcloud_combined"></div>
+                <h4 id="wordcloud-title-mobile">High vs Low Bigram's from Reviews</h4>
+                <div id="wordcloud_combined-mobile"></div>
             </div>
-        </div> -->
+        </div>
 
         <div class="m-page" id="b-cover">
             <h2>back cover</h2>

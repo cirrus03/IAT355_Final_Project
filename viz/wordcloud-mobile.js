@@ -1,5 +1,5 @@
 // STOPWORD LIST
-const stopwordsMobile = new Set([
+const stopwords = new Set([
   // Standard English stopwords
   "the","and","a","to","of","in","it","is","that","this","for","on","was", "can",
   "with","as","but","be","are","at","by","an","from","i","you","they",
@@ -53,7 +53,7 @@ function tokenize(text) {
     .map(w => w.replace(/['’]s$/g, ""))
     .map(w => w.substring(0, 30))
     .map(w => w.toLowerCase())
-    .filter(w => w && !stopwordsMobile.has(w));
+    .filter(w => w && !stopwords.has(w));
 }
 
 function makeBigrams(tokens) {
@@ -74,7 +74,7 @@ function CombinedWordCloud(low, high, {
   height = 570,
   maxWords = 75,
   padding = 4,
-  selector = "#wordcloud_combined"
+  selector = "#wordcloud_combined-mobile"
 } = {}) {
 
   // take 100 from each + inject color into objects
@@ -176,7 +176,7 @@ async function initWordCloud() {
 
     //combined cloud
     CombinedWordCloud( bigramsLow, bigramsHigh, {
-      selector: "#wordcloud_combined"
+      selector: "#wordcloud_combined-mobile"
     });
 
   } catch (err) {
