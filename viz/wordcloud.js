@@ -1,5 +1,5 @@
 // STOPWORD LIST
-const stopwords = new Set([
+const stopwordsMobile = new Set([
   // Standard English stopwords
   "the", "and", "a", "to", "of", "in", "it", "is", "that", "this", "for", "on", "was", "can",
   "with", "as", "but", "be", "are", "at", "by", "an", "from", "i", "you", "they",
@@ -52,7 +52,7 @@ function tokenize(text) {
     .map(w => w.replace(/['’]s$/g, ""))                    // possessives
     .map(w => w.substring(0, 30))                          // clamp length
     .map(w => w.toLowerCase())
-    .filter(w => w && !stopwords.has(w));
+    .filter(w => w && !stopwordsMobile.has(w));
 }
 
 function makeBigrams(tokens) {

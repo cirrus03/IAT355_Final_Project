@@ -117,6 +117,8 @@ body {
     flex-direction: column;
    /* justify-content: center;
     align-items: center;*/
+    overflow-y: auto;
+
     padding: 1rem;
 }
 
@@ -239,27 +241,6 @@ label {
     font-size: 1rem;
 }
 
-
-/* mobile sizing */
-
-.book-mobile {
-    display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    height: 100%;
-}
-
-.page {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-    text-align: center;
-    padding: 20px;
-    background-color: lightgray;
-    border: 1px solid gray;
-    height: 100%;
-}
-
 .text-spacing {
     padding-top: 1rem !important;
 }
@@ -275,6 +256,61 @@ label {
   pointer-events: none;
   transition: opacity 0.1s ease;
 }
+
+
+
+/* --------------------------mobile sizing -------------------------------*/
+
+.mobile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.7rem;
+    /* width: 80vh; */
+}
+
+.mobile-size .m-page {
+    background-color: var(--page-background);
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--primary);
+    color: var(--text-main);
+    /* flex-basis: 100%; */
+    padding: 1rem;
+    /* flex-grow: 1; */
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-size .page h1 {
+    color: var(--text-main);
+}
+
+
+/* .book-mobile {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+} */
+
+/* .page {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    text-align: center;
+    padding: 20px;
+    background-color: lightgray;
+    border: 1px solid gray;
+    height: 100%;
+} */
+
 
 
 
