@@ -28,9 +28,16 @@
   border-radius: 8px;
   z-index: 5;
 }
+#genre-chart-mobile {
+  position: relative;
+   background-color: #f8f4ec;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 5;
+}
 
 
-#genre-legend {
+#genre-legend-mobile {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 2rem;

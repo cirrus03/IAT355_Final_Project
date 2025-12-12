@@ -214,7 +214,7 @@ const wcContainer = document.querySelector("#wordcloud_combined");
 let resizerTimeout;
 
 const observer = new ResizeObserver(() => {
-  clearTimeout(resizeTimeout);
+  clearTimeout(resizerTimeout);
   resizerTimeout = setTimeout(() => {
     initWordCloud();
   }, 300); // waits 300ms after resize stops

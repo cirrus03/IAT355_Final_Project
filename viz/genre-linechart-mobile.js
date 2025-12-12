@@ -1,8 +1,12 @@
 // --------------------------------------------------
-// GLOBAL TOGGLE FUNCTION
+// TOGGLE STATE
 // --------------------------------------------------
+let activeGenresMobile = new Map();
 let activeGenreMobile = null;
+let lastModeMobile = null;   // track mobile/desktop across redraws
 
+
+// Toggle opacity + stroke width when a genre is clicked
 function toggleGenre(genre) {
   activeGenreMobile = activeGenreMobile === genre ? null : genre;
 
@@ -11,22 +15,54 @@ function toggleGenre(genre) {
       activeGenreMobile && d.genre !== activeGenreMobile ? 0.1 : 1
     )
     .attr("stroke-width", d =>
-      activeGenreMobile && d.genre !== activeGenreMobile ? 1.2 : 1.8
+      activeGenreMobile && d.genre !== activeGenreMobile ? 1.2 : 2.2
     );
 
-  // Adjust legend opacity
+  // Fade legend items that aren't selected
   document.querySelectorAll("#genre-legend-mobile .legend-item").forEach(el => {
     el.style.opacity =
       !activeGenreMobile || el.dataset.genre === activeGenreMobile ? 1 : 0.3;
   });
 }
 
+
 // --------------------------------------------------
-// MAIN FUNCTION
+// MAIN FUNCTION 
 // --------------------------------------------------
 async function releaseTrends() {
+
+  // Clear previous SVG + tooltip
+  d3.select("#genre-chart-mobile").selectAll("*").remove();
+  d3.select("body").selectAll(".tooltip").remove();
+
+  // Load container & compute responsive width/height
+  const container = document.getElementById("genre-chart-mobile");
+  const width = container.clientWidth;
+  const isMobile = width < 450;   // adjust breakpoint as needed
+
+  // Mobile-specific responsive height
+  let height = isMobile ? width * 1.3 : width * 1.1;
+
+  // Determine the squareness of the container is
+  const aspect = width / height;
+
+  // If container is roughly square 
+  if (aspect > 0.9 && aspect < 1.2) {
+    // Apply your custom aspect ratio
+    height = width*.9;
+  }
+
+  // Mobile margins (smaller but balanced)
+  const margin = isMobile
+    ? { top: 22, right: 10, bottom: 40, left: 35 }
+    : { top: 30, right: 20, bottom: 40, left: 40 };
+
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+
   // --------------------------------------------------
-  // LOAD CSV
+  // LOAD CSV + CLEAN DATA
   // --------------------------------------------------
   const raw = await d3.csv("./assets/book_details_with_mapped_genres_finals.csv");
 
@@ -38,9 +74,9 @@ async function releaseTrends() {
         ?.replace(/[\[\]']+/g, "")
         .split(",")
         .map(s => s.trim())
-        .filter(s => s.length > 0)
+        .filter(s => s)
     }))
-    .filter(d => d.year && d.year >= 1980 && d.year <= 2025);
+    .filter(d => d.year >= 1980 && d.year <= 2025);
 
   // --------------------------------------------------
   // FIND TOP 25 GENRES
@@ -51,13 +87,67 @@ async function releaseTrends() {
     g => g
   );
 
-  const top25 = Array.from(genreCounts.entries())
-    .sort((a, b) => d3.descending(a[1], b[1]))
-    .slice(0, 25)
+  const collapsedVisibleGenres = [
+    "fantasy",
+    "adult fiction",
+    "romance",
+    "paranormal & supernatural",
+    "mystery & crime",
+    "lgbtq+",
+    "religious & spiritual",
+    "contemporary life",
+    "literature & classics",
+    "world literature",
+    "classics",
+    "other / niche",
+  ];
+
+
+  // Sort all genres by frequency
+  const allGenresSorted = Array.from(genreCounts.entries())
+    .sort((a, b) => b[1] - a[1])
     .map(([g]) => g);
 
+  // Choose genres based on device
+  let genresToUse;
+
+  if (isMobile) {
+    // MOBILE --> show only collapsed visible genres
+    genresToUse = collapsedVisibleGenres.filter(g => allGenresSorted.includes(g));
+  } else {
+    // DESKTOP → top 25
+    genresToUse = allGenresSorted.slice(0, 25);
+  }
+
+  const top25 = genresToUse;
+
+  // ---------------------------
+  // MODE TRANSITION HANDLER
+  // ---------------------------
+  const mode = isMobile ? "mobile" : "desktop";
+
+  if (lastModeMobile === "mobile" && mode === "desktop") {
+    activeGenresMobile = new Map();
+    top25.forEach(g => activeGenresMobile.set(g, true));
+
+    const btn = document.getElementById("show-all-btn");
+    if (btn) btn.textContent = "Show Less";
+  }
+
+  lastMode = mode;
+
+  // Initialize visibility
+  if (activeGenresMobile.size === 0 || mode === "desktop") {
+    activeGenresMobile = new Map();
+    top25.forEach(g => activeGenresMobile.set(g, true));
+  }
+
+
+
+
+
   // --------------------------------------------------
-  // BUILD YEARLY COUNTS
+  // YEARLY COUNTS (SMOOTHED)
   // --------------------------------------------------
   const yearly = [];
   data.forEach(d => {
@@ -66,87 +156,60 @@ async function releaseTrends() {
     });
   });
 
-  const counts = d3
-    .rollups(
-      yearly,
-      v => v.length,
-      d => d.genre,
-      d => d.year
-    )
+  const counts = d3.rollups(
+    yearly,
+    v => v.length,
+    d => d.genre,
+    d => d.year
+  )
     .map(([genre, yearMap]) => {
-      const entries = Array.from(yearMap, ([year, count]) => ({
+      const arr = Array.from(yearMap, ([year, count]) => ({
         year: +year,
         count
-      }))
-        .filter(d => !Number.isNaN(d.year))
-        .sort((a, b) => a.year - b.year);
+      })).sort((a, b) => a.year - b.year);
 
-      // Moving average window = 5
-      entries.forEach((d, i) => {
-        const win = entries.slice(Math.max(0, i - 2), i + 3);
+      // 5-year moving average
+      arr.forEach((d, i) => {
+        const win = arr.slice(Math.max(0, i - 2), i + 3);
         d.smooth = d3.mean(win, x => x.count) || 0;
       });
 
-      return { genre, values: entries };
+      return { genre, values: arr };
     });
 
-  if (!counts.length) return;
-
   // --------------------------------------------------
-  // SVG SETUP
+  // SVG
   // --------------------------------------------------
-  const width = 610;
-  const height = 610;
-  const margin = { top: 40, right: 50, bottom: 40, left: 50 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-
   const svg = d3
     .select("#genre-chart-mobile")
     .append("svg")
-    // .attr("width", width)
-    // .attr("height", height);
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet")
     .style("width", "100%")
-    // .style("height", "auto");
-    .style("height", "100%")
-    .style("aspect-ratio", "1 / 1");
+    .style("height", "auto");
 
 
-  svg
-    .insert("rect", ":first-child")
+  // inner background rectangle
+  svg.append("rect")
     .attr("x", margin.left)
     .attr("y", margin.top)
     .attr("width", innerWidth)
     .attr("height", innerHeight)
-    .attr("fill", "var(--page-background)")
-    .attr("pointer-events", "none");
+    .attr("fill", "var(--page-background)");
 
-  const g = svg
-    .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // --------------------------------------------------
   // SCALES
   // --------------------------------------------------
-  const x = d3
-    .scaleLinear()
-    .domain([1980, 2025])
-    .range([0, innerWidth]);
+  const x = d3.scaleLinear().domain([1980, 2025]).range([0, innerWidth]);
 
-  const yMax =
-    d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
-
-  const y = d3
-    .scaleLinear()
-    .domain([0, yMax])
-    .nice()
-    .range([innerHeight, 0]);
+  const yMax = d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
+  const y = d3.scaleLinear().domain([0, yMax]).range([innerHeight, 0]).nice();
 
   // --------------------------------------------------
-  // COLOR PALETTE (unchanged)
-// --------------------------------------------------
+  // COLORS
+  // --------------------------------------------------
   const genreColors = [
     "#E77D62", "#345463", "#FF9E89", "#8A6B82", "#3C8A61",
     "#6F8FA0", "#A7849F", "#C4644C", "#DFAE7A", "#245E3D",
@@ -154,123 +217,103 @@ async function releaseTrends() {
     "#9EC3B0", "#D9C9D6", "#F5F2E4", "#67495F", "#5FAF83",
     "#F5CFA0", "#4F6F80", "#7BAA98", "#D4E7D6", "#8F674F"
   ];
-
-  const color = d3
-    .scaleOrdinal()
-    .domain(top25)
-    .range(genreColors);
+  const color = d3.scaleOrdinal().domain(top25).range(genreColors);
 
   // --------------------------------------------------
   // LINE GENERATOR
   // --------------------------------------------------
-  const line = d3
-    .line()
+  const line = d3.line()
     .x(d => x(d.year))
     .y(d => y(d.smooth))
     .curve(d3.curveMonotoneX);
 
   // --------------------------------------------------
-  // TOOLTIP + HOVER ELEMENTS
+  // TOOLTIP
   // --------------------------------------------------
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("position", "fixed")
-    .style("opacity", 0)
     .style("pointer-events", "none")
-    .style("z-index", 999999999);
-  
-
-  const hoverLine = g
-    .append("line")
-    .attr("stroke", "#555")
-    .attr("stroke-width", 1)
-    .attr("y1", 0)
-    .attr("y2", innerHeight)
-    .style("opacity", 0)
-    .style("pointer-events", "none");
-
-  const hoverDots = g
-    .append("g")
-    .style("opacity", 0)
-    .style("pointer-events", "none");
+    .style("opacity", 0);
 
   // --------------------------------------------------
-  // DRAW LINES (visual only)
-// --------------------------------------------------
+  // DRAW LINES
+  // --------------------------------------------------
+  const countsFiltered = counts.filter(d => top25.includes(d.genre));
+
   g.selectAll(".genre-line")
-    .data(counts)
+    .data(countsFiltered)
     .join("path")
     .attr("class", "genre-line")
     .attr("fill", "none")
     .attr("stroke", d => color(d.genre))
-    .attr("stroke-width", 1.8)
-    .attr("d", d => line(d.values));
+    .attr("stroke-width", isMobile ? 1.2 : 1.8)
+    .attr("d", d => line(d.values))
+    .style("display", d => activeGenresMobile.get(d.genre) ? "block" : "none");
 
-  // Helper: closest point in a series for a given year
-  function closestByYear(values, year) {
+  // --------------------------------------------------
+  // HOVER ELEMENTS
+  // --------------------------------------------------
+  const hoverLine = g.append("line")
+    .attr("y1", 0)
+    .attr("y2", innerHeight)
+    .attr("stroke", "#444")
+    .style("opacity", 0);
+
+  const hoverDots = g.append("g").style("opacity", 0);
+
+  function closest(values, yr) {
     return values.reduce((a, b) =>
-      Math.abs(b.year - year) < Math.abs(a.year - year) ? b : a
+      Math.abs(b.year - yr) < Math.abs(a.year - yr) ? b : a
     );
   }
 
-  // --------------------------------------------------
-  // OVERLAY RECT FOR HOVER
-  // --------------------------------------------------
   g.append("rect")
-    .attr("class", "hover-overlay")
     .attr("width", innerWidth)
     .attr("height", innerHeight)
-    .attr("fill", "none")
-    .attr("pointer-events", "all")
+    .attr("fill", "transparent")
     .on("mousemove", (event) => {
-      const [mx, my] = d3.pointer(event, g.node());
-      const hoveredYear = Math.round(x.invert(mx));
+      const [mx, my] = d3.pointer(event);
+      const year = Math.round(x.invert(mx));
 
-      const points = counts.map(series => {
-        const pt = closestByYear(series.values, hoveredYear);
+      const pts = counts.map(s => {
+        const p = closest(s.values, year);
         return {
-          genre: series.genre,
-          year: pt.year,
-          smooth: pt.smooth,
-          x: x(pt.year),
-          yVal: y(pt.smooth)
+          genre: s.genre,
+          year: p.year,
+          smooth: p.smooth,
+          x: x(p.year),
+          y: y(p.smooth)
         };
       });
 
-      // nearest line vertically to mouse
-      const nearest = points.reduce((a, b) =>
-        Math.abs(b.yVal - my) < Math.abs(a.yVal - my) ? b : a
+      const nearest = pts.reduce((a, b) =>
+        Math.abs(b.y - my) < Math.abs(a.y - my) ? b : a
       );
 
-      // vertical hover line
       hoverLine
-        .attr("x1", x(hoveredYear))
-        .attr("x2", x(hoveredYear))
-        .style("opacity", 0.8);
+        .attr("x1", x(year))
+        .attr("x2", x(year))
+        .style("opacity", 1);
 
-      // dots for all series
-      hoverDots
-        .selectAll("circle")
-        .data(points, d => d.genre)
+      hoverDots.selectAll("circle")
+        .data(pts)
         .join("circle")
-        .attr("r", 3.5)
         .attr("cx", d => d.x)
-        .attr("cy", d => d.yVal)
+        .attr("cy", d => d.y)
+        .attr("r", isMobile ? 2.4 : 3.2)
         .attr("fill", d => color(d.genre));
 
       hoverDots.style("opacity", 1);
 
-      // tooltip for nearest series
+      const offsetX = isMobile ? 8 : 12;
+      const offsetY = isMobile ? 18 : 28;
       tooltip
         .style("opacity", 1)
-        .html(
-          `<strong>${nearest.genre}</strong><br>` +
-            `Year: ${nearest.year}<br>` +
-            `Total books: ${nearest.smooth.toFixed(1)}`
-        )
-        .style("left", (event.clientX + 15) + "px")
-        .style("top", (event.clientY - 20) + "px");
+        .html(`<strong>${nearest.genre}</strong><br>Year: ${nearest.year}<br>Books: ${nearest.smooth.toFixed(1)}`)
+        .style("left", event.clientX + offsetX + "px")
+        .style("top", event.clientY - offsetY + "px");
     })
     .on("mouseout", () => {
       hoverLine.style("opacity", 0);
@@ -278,22 +321,16 @@ async function releaseTrends() {
       tooltip.style("opacity", 0);
     })
     .on("click", (event) => {
-      const [mx, my] = d3.pointer(event, g.node());
-      const clickedYear = Math.round(x.invert(mx));
+      const [mx, my] = d3.pointer(event);
+      const year = Math.round(x.invert(mx));
 
-      const points = counts.map(series => {
-        const pt = closestByYear(series.values, clickedYear);
-        return {
-          genre: series.genre,
-          year: pt.year,
-          smooth: pt.smooth,
-          x: x(pt.year),
-          yVal: y(pt.smooth)
-        };
+      const pts = counts.map(s => {
+        const p = closest(s.values, year);
+        return { genre: s.genre, y: y(p.smooth) };
       });
 
-      const nearest = points.reduce((a, b) =>
-        Math.abs(b.yVal - my) < Math.abs(a.yVal - my) ? b : a
+      const nearest = pts.reduce((a, b) =>
+        Math.abs(b.y - my) < Math.abs(a.y - my) ? b : a
       );
 
       toggleGenre(nearest.genre);
@@ -303,54 +340,58 @@ async function releaseTrends() {
   // AXES
   // --------------------------------------------------
   g.append("g")
-    .attr("transform", `translate(0, ${innerHeight})`)
-    .call(d3.axisBottom(x).ticks(9).tickFormat(d3.format("d")));
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(
+      d3.axisBottom(x)
+        .ticks(width < 500 ? 5 : 9)
+        .tickFormat(d3.format("d"))
+    );
 
   g.append("g").call(d3.axisLeft(y));
 
   // --------------------------------------------------
-  // TITLE & LABELS
+  // TITLES
   // --------------------------------------------------
   g.append("text")
     .attr("x", innerWidth / 2)
-    .attr("y", -15)
+    .attr("y", -12)
     .attr("text-anchor", "middle")
-    .style("font-size", "20px")
-    .style("font-family", "'Playfair Display', serif")
-    .style("font-weight", "500")
+    .text("Genre Publication Trends on Goodreads (1980–2025)")
+    .style("font-size", isMobile ? "12px" : "18px")
     .style("fill", "var(--text-main)")
-    .text("Genre Publication Trends on Goodreads (1980–2025)");
+    .style("font-family", "'Playfair Display', serif");
 
   g.append("text")
     .attr("x", innerWidth / 2)
     .attr("y", innerHeight + 30)
     .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("font-family", "'Playfair Display', serif")
+    .style("font-size", isMobile ? "10px" : "13px")
     .style("fill", "var(--text-main)")
+    .style("font-family", "'Playfair Display', serif")
     .text("Publication Year");
 
   g.append("text")
-    .attr("transform", `rotate(-90)`)
+    .attr("transform", "rotate(-90)")
     .attr("x", -innerHeight / 2)
     .attr("y", -40)
     .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("font-family", "'Playfair Display', serif")
+    .style("font-size", isMobile ? "10px" : "13px")
     .style("fill", "var(--text-main)")
+    .style("font-family", "'Playfair Display', serif")
     .text("Number of Books Published");
 
+
   // --------------------------------------------------
-  // LEGEND (your descriptions kept exactly)
-// --------------------------------------------------
+  // LEGEND STYLING + CONTENT
+  // --------------------------------------------------
   const legendContainer = document.getElementById("genre-legend-mobile");
   legendContainer.innerHTML = "";
   Object.assign(legendContainer.style, {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "5px 12px",
+    gridTemplateColumns: width < 350 ? "1fr" : "1fr 1fr",
+    gap: isMobile ? "4px 6px" : "5px 12px",
     width: "100%",
-    padding: "8px",
+    padding: isMobile ? "6px" : "8px",
     background: "var(--legend-color)",
     border: "1px solid var(--secondary)",
     borderRadius: "8px",
@@ -362,27 +403,27 @@ async function releaseTrends() {
     "adult fiction": "Fiction intended for mature readers, often with complex themes.",
     "romance": "Stories focused on relationships, attraction, and emotional intimacy.",
     "paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
-    "contemporary life": "Modern-day realistic stories about everyday experiences.",
     "mystery & crime": "Detective stories, investigations, and crime-solving.",
+    "lgbtq+": "Stories featuring queer identities, love, and themes.",
+    "religious & spiritual": "Faith-based, spiritual growth, or religious topics.",
+    "contemporary life": "Modern-day realistic stories about everyday experiences.",
     "historical fiction": "Stories set in real past historical periods.",
     "literature & classics": "Critically acclaimed works and timeless novels.",
+    "classics": "Canon literature with cultural significance.",
     "world literature": "Books originating from global cultures and languages.",
+    "other / niche": "Genres that don’t fit common categories.",
     "science fiction": "Speculative stories involving science, future tech, or space.",
     "adventure": "Action-driven stories with exploration or high-risk journeys.",
     "historical": "Nonfiction or fiction grounded heavily in history.",
     "kids & pre-teens": "Books written for children aged 8–12.",
     "horror": "Stories meant to scare, unsettle, or thrill.",
-    "other / niche": "Genres that don’t fit common categories.",
     "dark & erotic": "Mature stories exploring sensual or taboo topics.",
     "chick lit": "Lighthearted stories focusing on modern women’s lives.",
-    "classics": "Canon literature with cultural significance.",
     "comedy": "Humorous and lighthearted storytelling.",
     "dystopian": "Bleak future societies with oppressive control.",
     "ideas & growth": "Self-help, philosophy, and personal development.",
     "comics & manga": "Illustrated storytelling in comic or manga format.",
-    "lgbtq+": "Stories featuring queer identities, love, and themes.",
     "drama": "Emotionally intense character-driven stories.",
-    "religious & spiritual": "Faith-based, spiritual growth, or religious topics."
   };
 
   top25.forEach(genre => {
@@ -414,7 +455,7 @@ async function releaseTrends() {
 
     const label = document.createElement("span");
     label.textContent = genre;
-    label.style.fontSize = "0.55rem";
+    label.style.fontSize = isMobile ? "0.5rem" : "0.55rem";
     label.style.fontWeight = "500";
     label.style.fontFamily = "'Playfair Display', serif";
 
@@ -423,7 +464,7 @@ async function releaseTrends() {
 
     const desc = document.createElement("span");
     desc.textContent = genreDescriptions[genre] || "";
-    desc.style.fontSize = "0.55rem";
+    desc.style.fontSize = isMobile ? "0.45rem" : "0.55rem";
     desc.style.opacity = "0.7";
     desc.style.marginLeft = "16px";
     desc.style.fontFamily = "'Playfair Display', serif";
@@ -432,7 +473,7 @@ async function releaseTrends() {
     item.appendChild(desc);
     legendContainer.appendChild(item);
 
-    // Legend interactions
+
     item.addEventListener("mouseenter", () => {
       d3.selectAll(".genre-line")
         .attr("stroke-opacity", d => d.genre === genre ? 1 : 0.15)
@@ -442,14 +483,88 @@ async function releaseTrends() {
     item.addEventListener("mouseleave", () => {
       d3.selectAll(".genre-line")
         .attr("stroke-opacity", 1)
-        .attr("stroke-width", 1.8);
+        .attr("stroke-width", isMobile ? 1.2 : 1.8)
     });
 
     item.addEventListener("click", () => toggleGenre(genre));
   });
-} // END releaseTrends()
+
+
+  const showAllBtn = document.getElementById("show-all-btn");
+
+  if (showAllBtn) {
+    Object.assign(showAllBtn.style, {
+      backgroundColor: "var(--primary)",
+      color: "var(--page-background)",
+      border: "none",
+      padding: "6px 8px",
+      borderRadius: "8px",
+      fontFamily: "'Playfair Display', serif",
+      fontWeight: "500",
+      fontSize: "0.8rem",
+      cursor: "pointer",
+      marginTop: "10px",
+      width: "fit-content",
+      alignSelf: "center",
+      transition: "all 0.2s ease",
+      display: isMobile ? "none" : "block", // keep your mobile logic
+      zIndex: 1000
+    });
+
+    showAllBtn.onmouseenter = () => {
+      showAllBtn.style.backgroundColor = "var(--secondary)";
+    };
+    showAllBtn.onmouseleave = () => {
+      showAllBtn.style.backgroundColor = "var(--primary)";
+    };
+  }
+
+  if (showAllBtn) {
+
+    showAllBtn.onclick = () => {
+      const allVisible = [...activeGenresMobile.values()].every(v => v === true);
+
+      if (allVisible) {
+        // ------------------------------------------
+        // SHOW LESS
+        // ------------------------------------------
+        top25.forEach(g => {
+          activeGenresMobile.set(g, collapsedVisibleGenres.includes(g));
+        });
+
+        showAllBtn.textContent = "Show All Genres";
+
+      } else {
+        // ----------------------
+        // SHOW ALL
+        // ----------------------
+        top25.forEach(g => activeGenresMobile.set(g, true));
+        showAllBtn.textContent = "Show Less";
+      }
+
+      // Update lines
+      d3.selectAll(".genre-line")
+        .style("display", d => activeGenresMobile.get(d.genre) ? "block" : "none");
+
+      // Update legend opacity
+      document.querySelectorAll("#genre-legend-mobile .legend-item").forEach(el => {
+        const g = el.dataset.genre;
+        el.style.opacity = activeGenresMobile.get(g) ? 1 : 0.3;
+      });
+    };
+
+  }
+
+}
 
 // --------------------------------------------------
-// RUN FUNCTION
+// RUN + RESIZE LISTENER
 // --------------------------------------------------
 releaseTrends();
+
+let resizeTimeoutMobile;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeoutMobile);
+  resizeTimeoutMobile = setTimeout(() => releaseTrends(), 150);
+});
+
