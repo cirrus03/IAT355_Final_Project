@@ -282,6 +282,7 @@ h2, h3, h4{
 
 #title-subtitle {
     color: var(--background)
+    text-align: center;
 }
 
 p, ul, li {
