@@ -101,10 +101,17 @@ function CombinedWordCloud(low, high, {
   // clear existing SVG
   d3.select(selector).html("");
 
+  // const svg = d3.select(selector)
+  //   .append("svg")
+  //   .attr("width", width)
+  //   .attr("height", height);
   const svg = d3.select(selector)
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+  .append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .style("width", "100%")
+  .style("height", "auto")
+  .style("max-width", "100%")
+  .style("display", "block");
 
   // layout with combined word list
   d3.layout.cloud()
@@ -121,10 +128,12 @@ function CombinedWordCloud(low, high, {
     .on("end", draw)
     .start();
 
-  // ⭐ draw words w/ combined colors
+  // draw words w/ combined colors
   function draw(words) {
     svg.append("g")
+      // .attr("transform", `translate(${width/2}, ${height/2})`)
       .attr("transform", `translate(${width/2}, ${height/2})`)
+.style("pointer-events", "none")  // avoids text blocking page interactions
       .selectAll("text")
       .data(words)
       .enter()

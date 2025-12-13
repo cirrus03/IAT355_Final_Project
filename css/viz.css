@@ -28,9 +28,19 @@
   border-radius: 8px;
   z-index: 5;
 }
+#genre-chart-mobile {
+  position: relative;
+   background-color: #f8f4ec;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 5;
+
+  width: 100%;
+  min-height: 260px; /* or 300px */
+}
 
 
-#genre-legend {
+#genre-legend-mobile {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 2rem;
@@ -50,6 +60,12 @@
   height: 20px;
   margin-right: 0.5rem;
   border: 1px solid #ccc;
+}
+
+.vis-content,
+.chart-wrapper {
+    width: 100%;
+    min-width: 0; /* VERY IMPORTANT for flexbox */
 }
 
 #wordcloud_combined {
@@ -141,6 +157,11 @@ svg text {
   font-size: 12px;
   pointer-events: none;
   transition: opacity 0.1s ease;
+}
+
+#author-chart-mobile {
+  width: 100%;
+  min-height: 300px;
 }
 
 
