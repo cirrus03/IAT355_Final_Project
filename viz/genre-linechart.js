@@ -362,8 +362,8 @@ async function releaseTrends() {
     .attr("x", innerWidth / 2)
     .attr("y", -12)
     .attr("text-anchor", "middle")
-    .text("Genre Publication Trends on Goodreads (1980–2025)")
-    .style("font-size", isMobile ? "12px" : "18px")
+    .text("Visibility Over Time: How Genre Publication Shape Goodreads (1980–2025)")
+    .style("font-size", isMobile ? "12px" : "17px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif");
 

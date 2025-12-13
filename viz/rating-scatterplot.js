@@ -142,7 +142,7 @@ async function ratingScatter() {
     .style("font-family", "'Playfair Display', serif")
     .style("font-weight", "500")
     .style("fill", "var(--text-main, #333)")
-    .text("Popularity / Engagement vs Average Rating");
+    .text("Majority of Books are Rated 3.5 to 4.5 Stars");
 
   // --------------------------------------------------
   // TOOLTIP
