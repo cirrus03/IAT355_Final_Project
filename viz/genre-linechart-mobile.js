@@ -31,17 +31,32 @@ function toggleGenre(genre) {
 // --------------------------------------------------
 async function releaseTrends() {
 
+  const chartEl = document.getElementById("genre-chart-mobile");
+while (chartEl.firstChild) chartEl.removeChild(chartEl.firstChild);
+
+document.getElementById("genre-legend-mobile").innerHTML = "";
+d3.select("body").selectAll(".tooltip").remove();
+
+
   // Clear previous SVG + tooltip
   d3.select("#genre-chart-mobile").selectAll("*").remove();
   d3.select("body").selectAll(".tooltip").remove();
 
   // Load container & compute responsive width/height
   const container = document.getElementById("genre-chart-mobile");
-  const width = container.clientWidth;
+  // const width = container.clientWidth;
+  let width = container.clientWidth;
+  if (!width || width < 50) {
+    width = container.parentNode.clientWidth || 360; // fallback
+  }
+  
   const isMobile = width < 450;   // adjust breakpoint as needed
 
   // Mobile-specific responsive height
   let height = isMobile ? width * 1.3 : width * 1.1;
+  if (!height || height < 100) {
+    height = width * 1.2;
+  }
 
   // Determine the squareness of the container is
   const aspect = width / height;
@@ -57,8 +72,17 @@ async function releaseTrends() {
     ? { top: 22, right: 10, bottom: 40, left: 35 }
     : { top: 30, right: 20, bottom: 40, left: 40 };
 
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  var innerWidth = width - margin.left - margin.right;
+  var innerHeight = height - margin.top - margin.bottom;
+  if (innerWidth < 0) {
+    innerWidth = 0;
+  }
+  if (innerHeight < 0) {
+    innerHeight = 0;
+  }
+
+  
+
 
 
   // --------------------------------------------------
@@ -134,7 +158,7 @@ async function releaseTrends() {
     if (btn) btn.textContent = "Show Less";
   }
 
-  lastMode = mode;
+  lastModeMobile = mode;
 
   // Initialize visibility
   if (activeGenresMobile.size === 0 || mode === "desktop") {

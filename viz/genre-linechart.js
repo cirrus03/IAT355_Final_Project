@@ -57,8 +57,14 @@ async function releaseTrends() {
     ? { top: 22, right: 10, bottom: 40, left: 35 }
     : { top: 30, right: 20, bottom: 40, left: 40 };
 
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  var innerWidth = width - margin.left - margin.right;
+  var innerHeight = height - margin.top - margin.bottom;
+  if (innerWidth < 0) {
+    innerWidth = 0;
+  }
+   if (innerHeight < 0) {
+    innerHeight = 0;
+  }
 
 
   // --------------------------------------------------

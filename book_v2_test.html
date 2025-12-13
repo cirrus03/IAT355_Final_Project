@@ -28,6 +28,7 @@
     <script src="./viz/year-linechart-mobile.js" defer></script>
 
     <script src="./viz/author-vis.js" defer></script>
+    <script src="./viz/author-vis-mobile.js" defer></script>
 
     <!-- CSS files -->
     <link rel="stylesheet" href="./css/layout-book.css">
@@ -58,13 +59,12 @@
 
     <div class="mobile-container mobile-size">
 
-        <div class="m-page" id="f-cover">
+        <div class="m-page title-page title-page-layout" id="f-cover">
             <h1>What makes a "good" book?</h1>
             <h2 id="title-subtitle">Analyzing Goodreads users</h2>
         </div>
 
         <div class="m-page" id="m-p1">
-            <h2>Page 1</h2>
    
             <div class="text-content">
                 <h2>Chapter 1: Do Ratings Reflect Reach?</h2>
@@ -99,7 +99,6 @@
         </div>
 
         <div class="m-page" id="m-p2">
-            <h2>Page 2</h2>
 
             <div class="text-content">
                 <h2>Chapter 2: How Goodreads’ Growth Shaped Ratings</h2>
@@ -148,8 +147,7 @@
             </div>
         </div>
 
-        <!-- <div class="m-page" id="m-p3">
-            <h2>Page 3</h2>
+        <div class="m-page" id="m-p3">
 
             <div class="text-content">
                 <h2>Chapter 3: Top Rated Authors</h2>
@@ -169,13 +167,13 @@
                 </div>
             </div>
             <div class="vis-content">
-                <div id="f4" class="author-content">
+                <!-- <div class="author-content"> -->
                   
-                    <div id="author-chart"></div>
-                    <div class="author-tooltip" id="author-tooltip"></div>
-                </div>
+                    <div id="author-chart-mobile"></div>
+                    <div class="author-tooltip-mobile" id="author-tooltip-mobile"></div>
+                <!-- </div> -->
             </div>
-        </div> -->
+        </div>
 
         <div class="m-page" id="m-p4">
             <div class="text-content">
@@ -214,9 +212,8 @@
             </div>
         </div>
 
-        <div class="m-page" id="b-cover">
-            <h2>back cover</h2>
-        </div>
+        <!-- <div class="m-page" id="b-cover">
+        </div> -->
 
     </div>
 
