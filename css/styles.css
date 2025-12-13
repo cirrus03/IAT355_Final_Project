@@ -281,7 +281,7 @@ h2, h3, h4{
 }
 
 #title-subtitle {
-    color: var(--background)
+    color: var(--background);
     text-align: center;
 }
 
