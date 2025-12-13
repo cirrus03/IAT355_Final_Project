@@ -33,7 +33,7 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
   function renderChart() {
     // clear old content
     d3.select("#author-chart-mobile").selectAll("*").remove();
-    d3.select("#legend-container").selectAll("*").remove();
+    d3.select("#legend-container-mobile").selectAll("*").remove();
 
     // container size
     const container = document.getElementById("author-chart-mobile");
@@ -226,7 +226,7 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
     const legendWidth = legendCols * legendItemWidth + 16;
     const legendHeight = legendRows * legendItemHeight + 16;
 
-    const legendSvg = d3.select("#legend-container")
+    const legendSvg = d3.select("#legend-container-mobile")
       .append("svg")
       .attr("viewBox", `0 0 ${legendWidth} ${legendHeight}`)
       .style("max-width", "100%")
@@ -235,11 +235,11 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
     const legend = legendSvg.append("g")
       .attr("transform", "translate(8,8)");
 
-    const legendItems = legend.selectAll(".legend-item")
+    const legendItems = legend.selectAll(".legend-item-mobile")
       .data(topAuthorNames)
       .enter()
       .append("g")
-      .attr("class", "legend-item")
+      .attr("class", "legend-item-mobile")
       .attr("transform", (d, i) => {
         const col = i % legendCols;
         const row = Math.floor(i / legendCols);
