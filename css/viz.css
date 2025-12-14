@@ -86,7 +86,7 @@
 }
 
 /*button styling for show all genres*/
-button #show-all-btn {
+#show-all-btn {
   background: var(--text-main);
   color: var(--page-background);
   border: none;
