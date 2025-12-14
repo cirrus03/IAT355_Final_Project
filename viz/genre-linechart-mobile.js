@@ -88,7 +88,7 @@ d3.select("body").selectAll(".tooltip").remove();
   // --------------------------------------------------
   // LOAD CSV + CLEAN DATA
   // --------------------------------------------------
-  const raw = await d3.csv("./assets/book_details_with_mapped_genres_finals.csv");
+  const raw = await d3.csv("./data/book_details_with_mapped_genres_finals.csv");
 
   let data = raw
     .map(d => ({
@@ -112,17 +112,17 @@ d3.select("body").selectAll(".tooltip").remove();
   );
 
   const collapsedVisibleGenres = [
-    "fantasy",
-    "adult fiction",
-    "romance",
-    "paranormal & supernatural",
-    "mystery & crime",
-    "lgbtq+",
-    "religious & spiritual",
-    "contemporary life",
-    "world literature",
-    "classics",
-    "comedy",
+    "Fantasy",
+    "Adult fiction",
+    "Romance",
+    "Paranormal & supernatural",
+    "Mystery & crime",
+    "LGBTQ+",
+    "Religious & spiritual",
+    "Contemporary life",
+    "World literature",
+    "Classics",
+    "Comedy",
   ];
 
 
@@ -139,7 +139,7 @@ d3.select("body").selectAll(".tooltip").remove();
     genresToUse = collapsedVisibleGenres.filter(g => allGenresSorted.includes(g));
   } else {
     // DESKTOP → top 25
-    genresToUse = allGenresSorted.slice(0, 25);
+    genresToUse = allGenresSorted.slice(0, 22);
   }
 
   const top25 = genresToUse;
@@ -419,31 +419,29 @@ d3.select("body").selectAll(".tooltip").remove();
   });
 
   const genreDescriptions = {
-    "fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
-    "adult fiction": "Fiction intended for mature readers, often with complex themes.",
-    "romance": "Stories focused on relationships, attraction, and emotional intimacy.",
-    "paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
-    "mystery & crime": "Detective stories, investigations, and crime-solving.",
-    "lgbtq+": "Stories featuring queer identities, love, and themes.",
-    "religious & spiritual": "Faith-based, spiritual growth, or religious topics.",
-    "contemporary life": "Modern-day realistic stories about everyday experiences.",
-    "historical fiction": "Stories set in real past historical periods.",
-    "literature & classics": "Critically acclaimed works and timeless novels.",
-    "classics": "Canon literature with cultural significance.",
-    "world literature": "Books originating from global cultures and languages.",
-    "other / niche": "Genres that don’t fit common categories.",
-    "science fiction": "Speculative stories involving science, future tech, or space.",
-    "adventure": "Action-driven stories with exploration or high-risk journeys.",
-    "historical": "Nonfiction or fiction grounded heavily in history.",
-    "kids & pre-teens": "Books written for children aged 8–12.",
-    "horror": "Stories meant to scare, unsettle, or thrill.",
-    "dark & erotic": "Mature stories exploring sensual or taboo topics.",
-    "chick lit": "Lighthearted stories focusing on modern women’s lives.",
-    "comedy": "Humorous and lighthearted storytelling.",
-    "dystopian": "Bleak future societies with oppressive control.",
-    "ideas & growth": "Self-help, philosophy, and personal development.",
-    "comics & manga": "Illustrated storytelling in comic or manga format.",
-    "drama": "Emotionally intense character-driven stories.",
+    "Fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
+    "Adult fiction": "Fiction intended for mature readers, often with complex themes.",
+    "Romance": "Stories focused on relationships, attraction, and emotional intimacy.",
+    "Paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
+    "Mystery & crime": "Detective stories, investigations, and crime-solving.",
+    "LGBTQ+": "Stories featuring queer identities, love, and themes.",
+    "Religious & spiritual": "Faith-based, spiritual growth, or religious topics.",
+    "Contemporary life": "Modern-day realistic stories about everyday experiences.",
+    "Period pieces": "Stories set in a specific historical era with attention to detail.",
+    "Classics": "Canon literature with cultural significance.",
+    "World literature": "Books originating from global cultures and languages.",
+    "Other/Niche": "Genres that don’t fit common categories.",
+    "Science fiction": "Speculative stories involving science, future tech, or space.",
+    "Action & adventure": "Action-driven stories with exploration or high-risk journeys.",
+    "Children & pre-teens": "Books written for children aged 8–12.",
+    "Horror": "Stories meant to scare, unsettle, or thrill.",
+    "Dark & erotic": "Mature stories exploring sensual or taboo topics.",
+    "Chick lit": "Lighthearted stories focusing on modern women’s lives.",
+    "Comedy": "Humorous and lighthearted storytelling.",
+    "Dystopian": "Bleak future societies with oppressive control.",
+    "Ideas & growth": "Self-help, philosophy, and personal development.",
+    "Comics & manga": "Illustrated storytelling in comic or manga format.",
+    "Drama": "Emotionally intense character-driven stories.",
   };
 
   top25.forEach(genre => {
