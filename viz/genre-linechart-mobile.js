@@ -100,7 +100,7 @@ d3.select("body").selectAll(".tooltip").remove();
         .map(s => s.trim())
         .filter(s => s)
     }))
-    .filter(d => d.year >= 1980 && d.year <= 2025);
+    .filter(d => d.year >= 1900 && d.year <= 2025);
 
   // --------------------------------------------------
   // FIND TOP 25 GENRES
@@ -120,10 +120,9 @@ d3.select("body").selectAll(".tooltip").remove();
     "lgbtq+",
     "religious & spiritual",
     "contemporary life",
-    "literature & classics",
     "world literature",
     "classics",
-    "other / niche",
+    "comedy",
   ];
 
 
@@ -153,9 +152,6 @@ d3.select("body").selectAll(".tooltip").remove();
   if (lastModeMobile === "mobile" && mode === "desktop") {
     activeGenresMobile = new Map();
     top25.forEach(g => activeGenresMobile.set(g, true));
-
-    const btn = document.getElementById("show-all-btn");
-    if (btn) btn.textContent = "Show Less";
   }
 
   lastModeMobile = mode;
@@ -226,7 +222,7 @@ d3.select("body").selectAll(".tooltip").remove();
   // --------------------------------------------------
   // SCALES
   // --------------------------------------------------
-  const x = d3.scaleLinear().domain([1980, 2025]).range([0, innerWidth]);
+  const x = d3.scaleLinear().domain([1900, 2025]).range([0, innerWidth]);
 
   const yMax = d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
   const y = d3.scaleLinear().domain([0, yMax]).range([innerHeight, 0]).nice();
@@ -380,7 +376,7 @@ d3.select("body").selectAll(".tooltip").remove();
     .attr("x", innerWidth / 2)
     .attr("y", -12)
     .attr("text-anchor", "middle")
-    .text("Genre Publication Trends on Goodreads (1980–2025)")
+    .text("Genre Publication Trends on Goodreads (1900–2025)")
     .style("font-size", isMobile ? "12px" : "18px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif");
@@ -512,72 +508,6 @@ d3.select("body").selectAll(".tooltip").remove();
 
     item.addEventListener("click", () => toggleGenre(genre));
   });
-
-
-  const showAllBtn = document.getElementById("show-all-btn");
-
-  if (showAllBtn) {
-    Object.assign(showAllBtn.style, {
-      backgroundColor: "var(--primary)",
-      color: "var(--page-background)",
-      border: "none",
-      padding: "6px 8px",
-      borderRadius: "8px",
-      fontFamily: "'Playfair Display', serif",
-      fontWeight: "500",
-      fontSize: "0.8rem",
-      cursor: "pointer",
-      marginTop: "10px",
-      width: "fit-content",
-      alignSelf: "center",
-      transition: "all 0.2s ease",
-      display: isMobile ? "none" : "block", // keep your mobile logic
-      zIndex: 1000
-    });
-
-    showAllBtn.onmouseenter = () => {
-      showAllBtn.style.backgroundColor = "var(--secondary)";
-    };
-    showAllBtn.onmouseleave = () => {
-      showAllBtn.style.backgroundColor = "var(--primary)";
-    };
-  }
-
-  if (showAllBtn) {
-
-    showAllBtn.onclick = () => {
-      const allVisible = [...activeGenresMobile.values()].every(v => v === true);
-
-      if (allVisible) {
-        // ------------------------------------------
-        // SHOW LESS
-        // ------------------------------------------
-        top25.forEach(g => {
-          activeGenresMobile.set(g, collapsedVisibleGenres.includes(g));
-        });
-
-        showAllBtn.textContent = "Show All Genres";
-
-      } else {
-        // ----------------------
-        // SHOW ALL
-        // ----------------------
-        top25.forEach(g => activeGenresMobile.set(g, true));
-        showAllBtn.textContent = "Show Less";
-      }
-
-      // Update lines
-      d3.selectAll(".genre-line")
-        .style("display", d => activeGenresMobile.get(d.genre) ? "block" : "none");
-
-      // Update legend opacity
-      document.querySelectorAll("#genre-legend-mobile .legend-item").forEach(el => {
-        const g = el.dataset.genre;
-        el.style.opacity = activeGenresMobile.get(g) ? 1 : 0.3;
-      });
-    };
-
-  }
 
 }
 

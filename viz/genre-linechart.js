@@ -54,8 +54,8 @@ async function releaseTrends() {
 
   // Mobile margins (smaller but balanced)
   const margin = isMobile
-    ? { top: 22, right: 10, bottom: 40, left: 35 }
-    : { top: 30, right: 20, bottom: 40, left: 40 };
+    ? { top: 22, right: 10, bottom: 40, left: 50 }
+    : { top: 30, right: 20, bottom: 40, left: 60 };
 
   var innerWidth = width - margin.left - margin.right;
   var innerHeight = height - margin.top - margin.bottom;
@@ -82,7 +82,7 @@ async function releaseTrends() {
         .map(s => s.trim())
         .filter(s => s)
     }))
-    .filter(d => d.year >= 1980 && d.year <= 2025);
+    .filter(d => d.year >= 1900 && d.year <= 2025);
 
   // --------------------------------------------------
   // FIND TOP 25 GENRES
@@ -102,10 +102,9 @@ async function releaseTrends() {
     "lgbtq+",
     "religious & spiritual",
     "contemporary life",
-    "literature & classics",
     "world literature",
     "classics",
-    "other / niche",
+    "comedy",
   ];
 
 
@@ -147,10 +146,6 @@ async function releaseTrends() {
     activeGenres = new Map();
     top25.forEach(g => activeGenres.set(g, true));
   }
-
-
-
-
 
   // --------------------------------------------------
   // YEARLY COUNTS (SMOOTHED)
@@ -208,7 +203,7 @@ async function releaseTrends() {
   // --------------------------------------------------
   // SCALES
   // --------------------------------------------------
-  const x = d3.scaleLinear().domain([1980, 2025]).range([0, innerWidth]);
+  const x = d3.scaleLinear().domain([1900, 2025]).range([0, innerWidth]);
 
   const yMax = d3.max(counts, d => d3.max(d.values, v => v.smooth)) || 1;
   const y = d3.scaleLinear().domain([0, yMax]).range([innerHeight, 0]).nice();
@@ -362,7 +357,7 @@ async function releaseTrends() {
     .attr("x", innerWidth / 2)
     .attr("y", -12)
     .attr("text-anchor", "middle")
-    .text("Visibility Over Time: How Genre Publication Shape Goodreads (1980–2025)")
+    .text("Visibility Over Time: How Genre Publication Shape Goodreads (1900–2025)")
     .style("font-size", isMobile ? "12px" : "17px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif");
