@@ -231,11 +231,11 @@ d3.select("body").selectAll(".tooltip").remove();
   // COLORS
   // --------------------------------------------------
   const genreColors = [
-    "#E77D62", "#345463", "#FF9E89", "#8A6B82", "#3C8A61",
-    "#6F8FA0", "#A7849F", "#C4644C", "#DFAE7A", "#245E3D",
+    "#E77D62", "#345463", "#FF9E89", "#5d4758ff", "#3C8A61",
+    "#6F8FA0", "#886280ff", "#C4644C", "#DFAE7A", "#245E3D",
     "#9FB3BC", "#5E3C2B", "#FFBFAF", "#8A4E3C", "#B78463",
-    "#9EC3B0", "#D9C9D6", "#F5F2E4", "#67495F", "#5FAF83",
-    "#F5CFA0", "#4F6F80", "#7BAA98", "#D4E7D6", "#8F674F"
+    "#9EC3B0", "#caa7c4ff", "#c6b671ff", "#67495F", "#5FAF83",
+    "#F5CFA0", "#4F6F80", "#7BAA98", "#a9c5acff", "#8F674F"
   ];
   const color = d3.scaleOrdinal().domain(top25).range(genreColors);
 
@@ -429,11 +429,11 @@ d3.select("body").selectAll(".tooltip").remove();
     "Contemporary life": "Modern-day realistic stories about everyday experiences.",
     "Period pieces": "Stories set in a specific historical era with attention to detail.",
     "Classics": "Canon literature with cultural significance.",
-    "World literature": "Books originating from global cultures and languages.",
+    "World literature": "Books set in or about global cultures and languages.",
     "Other/Niche": "Genres that don’t fit common categories.",
     "Science fiction": "Speculative stories involving science, future tech, or space.",
     "Action & adventure": "Action-driven stories with exploration or high-risk journeys.",
-    "Children & pre-teens": "Books written for children aged 8–12.",
+    "Children & pre-teens": "Books written for children aged 8-12 years old.",
     "Horror": "Stories meant to scare, unsettle, or thrill.",
     "Dark & erotic": "Mature stories exploring sensual or taboo topics.",
     "Chick lit": "Lighthearted stories focusing on modern women’s lives.",
