@@ -196,15 +196,8 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-   /* justify-content: center;
-    align-items: center;*/
     overflow-y: auto;
-
     padding: 1rem;
-}
-
-.back-content {
-    overflow-y: auto;
 }
 
 .front {
@@ -231,15 +224,12 @@ body {
     justify-content: center;
     align-items: center;
     border: 2px solid var(--background);
-    padding: 4rem;
-    padding-left: 5rem;
+    margin-left: .3rem;
 }
 
 
 .back-content {
     transform: rotateY(180deg);
-        overflow-y: auto;
-
 }
 
 
