@@ -171,7 +171,7 @@ function CombinedWordCloud(low, high, {
 // =====================================================================
 async function initWordCloud() {
   try {
-    const reviews = await d3.csv("./assets/book_reviews_cleaned.csv");
+    const reviews = await d3.csv("./data/book_reviews_cleaned.csv");
 
     // high/low ratings
     const highRated = reviews.filter(r => +r.review_rating_n >= 4.4);
