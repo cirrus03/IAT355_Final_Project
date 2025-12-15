@@ -1,5 +1,5 @@
 .site-margin {
-    margin-right: 7rem;   
+    margin-right: 7rem;
     margin-left: 7rem;
 }
 
@@ -8,8 +8,8 @@ body {
 }
 
 object {
-    max-width: 600px;
-    min-width: 200px;
+    max-width: 500px;
+    min-width: 150px;
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -21,6 +21,7 @@ object {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+    margin-top: 2rem;
 }
 
 .team-container {
@@ -38,6 +39,8 @@ object {
     align-items: flex-start;
     justify-content: center;
     row-gap: 1rem;
+    max-width: 515px;
+    width: 100%;
 }
 
 #team-title {
@@ -48,6 +51,7 @@ object {
 .team-member {
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 0.5rem;
     background-color: var(--legend-color);
     border: 1px solid var(--secondary);
@@ -57,7 +61,7 @@ object {
 
 /* media queries for responsiveness */
 
-@media (width <= 65rem) {
+@media (width <=65rem) {
     .team-container {
         flex-direction: column;
         gap: 2rem;
@@ -65,20 +69,40 @@ object {
     }
 
     .site-margin {
-        margin-right: 2rem;   
+        margin-right: 2rem;
         margin-left: 2rem;
         margin-bottom: 2rem;
     }
+
+    object {
+        max-width: 350px;
+    }
+
 }
 
-@media (width <= 40rem) {
+@media (width <=40rem) {
     .team-photo {
-        min-width: 150px;
+        min-width: 100px;
     }
 
     .site-margin {
-        margin-right: 1rem;   
+        margin-right: 1rem;
         margin-left: 1rem;
         margin-bottom: 1rem;
     }
+
+    .content-container {
+        margin-top: 0;
+    }
+}
+
+@media (width <=30rem) {
+
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
 }
