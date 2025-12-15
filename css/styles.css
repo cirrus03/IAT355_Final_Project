@@ -102,9 +102,30 @@ body {
     /* margin-bottom: 0.5rem; */
 }
 
-.button-container button {
-    padding: 0.5rem 1rem 0.5rem 1rem;
+.button-container {
     margin: 0.2rem;
+}
+
+#prev-btn, #next-btn {
+    background: var(--text-main);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0.4rem 1rem;
+    margin: 0 0.5rem;
+}
+
+#prev-btn:hover, #next-btn:hover {
+    opacity: 0.6;
+    transition-duration: "0.3s";
+}
+
+.button-arrows {
+    color: var(--page-background);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
 }
 
 .book {
