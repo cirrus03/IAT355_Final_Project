@@ -71,8 +71,6 @@ d3.select("body").selectAll(".tooltip").remove();
     innerHeight = 0;
   }
 
-  
-
 
 
   // --------------------------------------------------

@@ -339,7 +339,15 @@ label {
 
 
 
+#author-chart-mobile {
+  width: 100%;
+  min-height: 420px;
+}
 
+.vis-content  {
+    /* min-width: 20rem; */
+    width: 100%;
+}
 
 
 

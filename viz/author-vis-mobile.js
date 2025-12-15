@@ -31,6 +31,12 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
   let selectedAuthor = null;
 
   function renderChart() {
+
+    const authorContainer = document.getElementById("author-chart-mobile");
+    if (!authorContainer || authorContainer.clientWidth === 0) {
+      console.log("container value or client width was 0");
+      return;}
+
     // clear old content
     d3.select("#author-chart-mobile").selectAll("*").remove();
     d3.select("#legend-container-mobile").selectAll("*").remove();
@@ -43,6 +49,8 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
     const margin = { top: 40, right: 30, bottom: 60, left: 70 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
+
+    const isScreenSmall = container.clientWidth < 400;
 
     // svg with viewBox for responsiveness
     const svg = d3.select("#author-chart-mobile").append("svg")
@@ -98,10 +106,23 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
     const yAxisG = g.append("g")
       .call(yAxis);
 
-    xAxisG.selectAll("text")
+    // xAxisG.selectAll("text")
+    //   .style("font-family", "'Playfair Display', serif")
+    //   .style("font-size", "11px")
+    //   .style("fill", "var(--text-main, #2C6E49)");
+    const xTickLabels = xAxisG.selectAll("text")
       .style("font-family", "'Playfair Display', serif")
       .style("font-size", "11px")
       .style("fill", "var(--text-main, #2C6E49)");
+
+    if (isScreenSmall) {
+      xTickLabels
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-45)")
+        .attr("dx", "-0.6em")
+        .attr("dy", "0.15em")
+        .style("font-size", "10px");
+    }
 
     yAxisG.selectAll("text")
       .style("font-family", "'Playfair Display', serif")
@@ -115,7 +136,9 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
       .style("stroke", "var(--axis-grid, #d0d0d0)");
 
     // axis labels
-    svg.append("text")
+    if (container.clientWidth > 450) { //append the ticks normally
+      console.log(container.clientWidth + "full size");
+      svg.append("text") 
       .attr("class", "x-label")
       .attr("text-anchor", "middle")
       .attr("x", width / 2)
@@ -124,6 +147,21 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
       .style("font-family", "'Playfair Display', serif")
       .style("fill", "var(--text-main, #2C6E49)")
       .text("Publication Year");
+    }
+    else { //rotate the label ticks
+      console.log(container.clientWidth + "too small");
+      svg.append("text")
+      .attr("class", "x-label")
+      .attr("text-anchor", "middle")
+      .attr("x", width / 2)
+      .attr("y", height - 15)
+      .style("font-size", "13px")
+      .style("font-family", "'Playfair Display', serif")
+      .style("fill", "var(--text-main, #2C6E49)")
+      .text("Publication Year")
+      .attr("transform", "rotate(-45)");
+    }
+    
 
     svg.append("text")
       .attr("class", "y-label")
@@ -301,5 +339,12 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
 
   // initial render + resize handler
   renderChart();
+//   const observer = new IntersectionObserver(entries => {
+//   if (entries[0].isIntersecting) {
+//     renderChart();
+//   }
+// }, { threshold: 0.3 });
+
+observer.observe(document.getElementById("author-chart-mobile"));
   window.addEventListener("resize", renderChart);
 });
