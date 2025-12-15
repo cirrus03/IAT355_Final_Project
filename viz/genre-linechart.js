@@ -37,19 +37,13 @@ async function releaseTrends() {
   // Load container & compute responsive width/height
   const container = document.getElementById("chart");
   const width = container.clientWidth;
-  const isMobile = width < 450;   // adjust breakpoint as needed
+  const isMobile = width < 450; 
 
   // Mobile-specific responsive height
-  let height = isMobile ? width * 1.3 : width * 1.1;
+  let height = isMobile ? width * 1.2 : width * .95;
 
   // Determine the squareness of the container is
   const aspect = width / height;
-
-  // If container is roughly square 
-  if (aspect > 0.9 && aspect < 1.05) {
-    height = width*.9;
-  }
-
   // Mobile margins (smaller but balanced)
   const margin = isMobile
     ? { top: 22, right: 10, bottom: 40, left: 50 }
@@ -355,8 +349,8 @@ async function releaseTrends() {
     .attr("x", innerWidth / 2)
     .attr("y", -12)
     .attr("text-anchor", "middle")
-    .text("Visibility Over Time: How Genre Publication Shape Goodreads (1900–2025)")
-    .style("font-size", isMobile ? "12px" : "17px")
+    .text("Visibility Over Time: How Genre Publication Shape Goodreads")
+    .style("font-size", isMobile ? "12px" : "16px")
     .style("fill", "var(--text-main)")
     .style("font-family", "'Playfair Display', serif");
 

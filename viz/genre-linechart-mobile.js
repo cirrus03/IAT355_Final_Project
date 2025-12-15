@@ -53,20 +53,10 @@ d3.select("body").selectAll(".tooltip").remove();
   const isMobile = width < 450;   // adjust breakpoint as needed
 
   // Mobile-specific responsive height
-  let height = isMobile ? width * 1.3 : width * 1.1;
+  let height = isMobile ? width * 1.3 : width * .95;
   if (!height || height < 100) {
     height = width * 1.2;
   }
-
-  // Determine the squareness of the container is
-  const aspect = width / height;
-
-  // If container is roughly square 
-  if (aspect > 0.9 && aspect < 1.2) {
-    // Apply your custom aspect ratio
-    height = width*.9;
-  }
-
   // Mobile margins (smaller but balanced)
   const margin = isMobile
     ? { top: 22, right: 10, bottom: 40, left: 35 }
