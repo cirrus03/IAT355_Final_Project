@@ -38,7 +38,7 @@ d3.csv("data/book_details_cleaned_final.csv").then(function(books) {
     // container size
     const container = document.getElementById("author-chart");
     const width = container.clientWidth || 560;
-    const height = container.clientHeight || 420;
+    const height = width * 0.92;
 
     const margin = { top: 40, right: 30, bottom: 60, left: 70 };
     const innerWidth = width - margin.left - margin.right;
