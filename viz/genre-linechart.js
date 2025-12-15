@@ -5,7 +5,6 @@ let activeGenres = new Map();
 let activeGenre = null;
 let lastMode = null;   // track mobile/desktop across redraws
 
-
 // Toggle opacity + stroke width when a genre is clicked
 function toggleGenre(genre) {
   activeGenre = activeGenre === genre ? null : genre;
@@ -47,8 +46,7 @@ async function releaseTrends() {
   const aspect = width / height;
 
   // If container is roughly square 
-  if (aspect > 0.9 && aspect < 1.2) {
-    // Apply your custom aspect ratio
+  if (aspect > 0.9 && aspect < 1.05) {
     height = width*.9;
   }
 
@@ -400,7 +398,7 @@ async function releaseTrends() {
   });
 
   const genreDescriptions = {
-    "Fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
+    "Fantasy": "Stories with magical worlds and mythical creatures",
     "Adult fiction": "Fiction intended for mature readers, often with complex themes.",
     "Romance": "Stories focused on relationships, attraction, and emotional intimacy.",
     "Paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",

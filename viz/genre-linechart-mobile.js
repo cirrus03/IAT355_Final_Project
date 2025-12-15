@@ -419,7 +419,7 @@ d3.select("body").selectAll(".tooltip").remove();
   });
 
   const genreDescriptions = {
-    "Fantasy": "Stories with magical worlds, mythical creatures, or supernatural elements.",
+    "Fantasy": "Stories with magical worlds and mythical creatures",
     "Adult fiction": "Fiction intended for mature readers, often with complex themes.",
     "Romance": "Stories focused on relationships, attraction, and emotional intimacy.",
     "Paranormal & supernatural": "Ghosts, vampires, witches, or unexplained phenomena.",
