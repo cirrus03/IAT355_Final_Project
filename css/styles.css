@@ -288,7 +288,7 @@ h2, h3, h4{
   font-weight: 500;
 }
 
-#title-subtitle {
+.title-subtitle {
     color: var(--background);
     text-align: center;
 }
