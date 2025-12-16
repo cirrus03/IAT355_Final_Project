@@ -14,8 +14,8 @@ Visualizations for this project were created with D3.js
 [Books_Dataset_GoodReads(May 2024)](https://www.kaggle.com/datasets/dk123891/books-dataset-goodreadsmay-2024) by Grimm on Kaggle
 
 * Removed all non-fiction and audiobook entries
-* Standarize inconsistent genre labels
-* Condensing Genre categories
+* Standarized inconsistent genre labels
+* Condensed genre categories
 
 
 ## Other references
