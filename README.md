@@ -1,7 +1,7 @@
 # What makes a "good" book?
-Analyzing biases and inflated ratings on Goodreads
+*Analyzing biases and inflated ratings on Goodreads*
 
-Group 18: Mango
+**Group 18: Mango**
 
 Created for IAT 355 Fall 2025
 
@@ -10,10 +10,16 @@ Goodreads is the world's largest website for book reviews and recommendations. A
 
 Visualizations for this project were created with D3.js
 
-## References
-**Dataset**
+## Dataset
 [Books_Dataset_GoodReads(May 2024)](https://www.kaggle.com/datasets/dk123891/books-dataset-goodreadsmay-2024) by Grimm on Kaggle
 
-**Book tutorial**
+* Removed all non-fiction and audiobook entries
+* Standarize inconsistent genre labels
+* Condensing Genre categories
+
+
+## Other references
+### Book Tutorial
 YouTube: [Let's make a Flip Book using HTML CSS JavaScript (Step by Step Guide)](https://www.youtube.com/watch?v=0kD6ff2J3BQ) by Coding Star
+
 GitHub: [3D-Book-Tutorial-Basic-CodingStar](https://github.com/codingstar-jason/3D-Book-Tutorial-Basic-CodingStar) by codingstar-jason
