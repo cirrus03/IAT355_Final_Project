@@ -20,6 +20,6 @@ All visualizations for this project were created with D3.js
 
 ## Other references
 ### Book Tutorial
-YouTube: [Let's make a Flip Book using HTML CSS JavaScript (Step by Step Guide)](https://www.youtube.com/watch?v=0kD6ff2J3BQ) by Coding Star
+**YouTube:** [Let's make a Flip Book using HTML CSS JavaScript (Step by Step Guide)](https://www.youtube.com/watch?v=0kD6ff2J3BQ) by Coding Star
 
-GitHub: [3D-Book-Tutorial-Basic-CodingStar](https://github.com/codingstar-jason/3D-Book-Tutorial-Basic-CodingStar) by codingstar-jason
+**GitHub:** [3D-Book-Tutorial-Basic-CodingStar](https://github.com/codingstar-jason/3D-Book-Tutorial-Basic-CodingStar) by codingstar-jason
