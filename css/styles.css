@@ -123,6 +123,7 @@ body {
     font-size: 1.2rem;
     margin: 0;
     padding: 0;
+    text-decoration: none;
 }
 
 .book {
@@ -288,7 +289,7 @@ h2, h3, h4{
   font-weight: 500;
 }
 
-#title-subtitle {
+.title-subtitle {
     color: var(--background);
     text-align: center;
 }

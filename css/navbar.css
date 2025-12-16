@@ -19,9 +19,6 @@ nav {
     flex-direction: row;
     justify-content: center; */
     margin: 0.1rem 5rem 0 5rem;
-}
-
-nav ul {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -29,7 +26,8 @@ nav ul {
     list-style-type: none;
 }
 
-nav ul li {
+
+nav a, nav div a {
     padding: 1rem;
 }
 
