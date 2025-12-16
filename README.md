@@ -2,6 +2,7 @@
 Analyzing biases and inflated ratings on Goodreads
 
 Group 18: Mango
+
 Created for IAT 355 Fall 2025
 
 ## Project Overview
