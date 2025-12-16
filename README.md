@@ -6,7 +6,7 @@
 Created for IAT 355 Fall 2025
 
 ## Project Overview
-Goodreads is the world's largest website for book reviews and recommendations. As such, it also has many publically avaible datasets. The aim of this project was to help shed light on some biases that can influence a Goodreads review. On Goodreads, users can encounter biases such as popularity effects, rating, herd mentality, and more. We wanted to help inform users about such biases with the hope that these insights can stick with them the next time they're looking at a review when searching for for a new book.
+Goodreads is the world's largest website for book reviews and recommendations. As such, it also has many publically avaible datasets. The aim of this project was to help shed light on some biases that can influence a Goodreads review. On Goodreads, users can encounter biases such as popularity effects, rating inflation, herd mentality, and more. We wanted to help inform users about such biases with the hope that these insights can stick with them the next time they're looking at a review when searching for for a new book.
 
 Visualizations for this project were created with D3.js
 
