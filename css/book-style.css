@@ -13,7 +13,7 @@ body {
     place-content: center;
     height: 100vh;
     width: 100vw;
-	overflow: hidden;
+	overflow: visible;
 	background: #f1c40f;
 }
 
@@ -40,8 +40,8 @@ body {
     background: white;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	/*justify-content: center;
+	align-items: center; */
     gap: 10px;
     border: 1px solid rgba(0, 0, 0, 0.11);
 }

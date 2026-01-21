@@ -1,33 +1,108 @@
-
-
-* {
-    box-sizing: border-box;
+.site-margin {
+    margin-right: 7rem;
+    margin-left: 7rem;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #FEFEE3;
+    background-color: var(--background);
 }
 
-.nav {
-    background-color: #FEFEE3;
+object {
+    max-width: 500px;
+    min-width: 150px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
-
 
 .content-container {
     display: flex;
-    /* justify-content: center; */
-    gap: 3rem;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    margin-top: 2rem;
+}
+
+.team-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
 }
 
 .list-team {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    row-gap: 1rem;
+    max-width: 515px;
+    width: 100%;
+}
+
+#team-title {
+    color: var(--primary);
+    text-align: left;
+}
+
+.team-member {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    background-color: var(--legend-color);
+    border: 1px solid var(--secondary);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+/* media queries for responsiveness */
+
+@media (width <=65rem) {
+    .team-container {
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .site-margin {
+        margin-right: 2rem;
+        margin-left: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    object {
+        max-width: 350px;
+    }
+
+}
+
+@media (width <=40rem) {
+    .team-photo {
+        min-width: 100px;
+    }
+
+    .site-margin {
+        margin-right: 1rem;
+        margin-left: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .content-container {
+        margin-top: 0;
+    }
+}
+
+@media (width <=30rem) {
+
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
 }

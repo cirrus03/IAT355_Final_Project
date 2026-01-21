@@ -1,0 +1,44 @@
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:'Playfair Display', serif;
+}
+
+a {
+    text-decoration: none;
+    color: #2C6E49;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+nav {
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center; */
+    margin: 0.1rem 5rem 0 5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+}
+
+
+nav a, nav div a {
+    padding: 1rem;
+}
+
+.right-aligned {
+    display: flex;
+    flex-direction: row;
+}
+
+
+a:hover, a:focus, a:active {
+    color: orange;
+    text-decoration: underline;
+}
+

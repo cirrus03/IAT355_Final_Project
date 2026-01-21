@@ -1,0 +1,196 @@
+// STOPWORD LIST
+const stopwords = new Set([
+  // Standard English stopwords
+  "the","and","a","to","of","in","it","is","that","this","for","on","was", "can",
+  "with","as","but","be","are","at","by","an","from","i","you","they",
+  "we","he","she","them","my","your","their","so","if","not","or","just",
+  "me","what","when","how","who","why","had","have","has","been","will",
+  "its","too","very","also","because","while","than","then","there","here",
+  "which","were","would","could","should","into","out","about","more",
+  "most","such","only","other","some","any","really","really","also",
+  "ever","maybe","perhaps","quite","even","still","yet","though", "his", "him", "her", "she",
+
+  // Pronouns + contractions
+  "im","ive","id","ill","youre","youve","youll","theyre","theyve","theyll",
+  "were","wasnt","dont","doesnt","didnt","cant","couldnt","shouldnt",
+  "isnt","arent","werent","theyll","theres","heres","hes","shes", 
+
+  // Review common filler words
+  "book","read","reading","reads","reader","review",
+  "one","two","first","second","third","thing","things",
+  "bit","kind","sort","way",
+  // "story"
+
+  // Generic adjectives that add noise
+  "really","pretty","quite","rather","basically","literally","honestly",
+  "actually","obviously","definitely","kind","sort","different","same", "like",
+
+  // Time / meta words reviewers use
+  "finally","overall","however","though","through","during","after","before",
+  "chapter","chapters","page","pages","copy",
+
+  // Speech / conversational fluff
+  "well","um","uh","yeah","lol","haha","oh","okay","ok","maybe",
+
+  // Common verbs that add no semantic value
+  "make","makes","made","get","gets","got","go","goes","went","see",
+  "seems","seemed","feel","feels","felt","think","thought",
+
+  // Goodreads-style review words
+  "spoiler","spoilers","summary","synopsis","reviewer","rating","stars","star"
+]);
+
+
+
+// =====================================================================
+// TOKENIZER + BIGRAM MAKER (UNCHANGED)
+// =====================================================================
+function tokenize(text) {
+  return text
+    .split(/[\s.]+/g)
+    .map(w => w.replace(/^[“‘"\-—()\[\]{}]+/g, ""))
+    .map(w => w.replace(/[;:.!?()\[\]{},"'’”\-—]+$/g, ""))
+    .map(w => w.replace(/['’]s$/g, ""))
+    .map(w => w.substring(0, 30))
+    .map(w => w.toLowerCase())
+    .filter(w => w && !stopwords.has(w));
+}
+
+function makeBigrams(tokens) {
+  const bigrams = [];
+  for (let i = 0; i < tokens.length - 1; i++) {
+    bigrams.push(tokens[i] + " " + tokens[i + 1]);
+  }
+  return bigrams;
+}
+
+
+
+// =====================================================================
+// COMBINED WORDCLOUD FUNCTION
+// =====================================================================
+function CombinedWordCloud(low, high, {
+  width = 550,
+  height = 570,
+  maxWords = 75,
+  padding = 4,
+  selector = "#wordcloud_combined-mobile"
+} = {}) {
+
+  // take 100 from each + inject color into objects
+    const combined = [
+
+    ...high.slice(0, maxWords).map(d => ({
+      text: d.text,
+      size: d.size,
+      color: "#2E8B57"    // green for high ratings
+    })),
+
+    ...low.slice(0, maxWords).map(d => ({
+      text: d.text,
+      size: d.size,
+      color: "#C63737"    // red for low ratings
+    }))
+  ];
+
+  // dynamic font scale across datasets
+  const sizeScale = d3.scaleLinear()
+    .domain([d3.min(combined, d => d.size), d3.max(combined, d => d.size)])
+    .range([10, 40]);
+
+  // clear existing SVG
+  d3.select(selector).html("");
+
+  // const svg = d3.select(selector)
+  //   .append("svg")
+  //   .attr("width", width)
+  //   .attr("height", height);
+  const svg = d3.select(selector)
+  .append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .style("width", "100%")
+  .style("height", "auto")
+  .style("max-width", "100%")
+  .style("display", "block");
+
+  // layout with combined word list
+  d3.layout.cloud()
+    .size([width, height])
+    .words(combined.map(w => ({
+      text: w.text,
+      size: sizeScale(w.size),
+      color: w.color
+    })))
+    .padding(padding)
+    .rotate(() => (Math.random() > 0.8 ? 90 : 0))
+    .font("Playfair Display")
+    .fontSize(d => d.size)
+    .on("end", draw)
+    .start();
+
+  // draw words w/ combined colors
+  function draw(words) {
+    svg.append("g")
+      // .attr("transform", `translate(${width/2}, ${height/2})`)
+      .attr("transform", `translate(${width/2}, ${height/2})`)
+.style("pointer-events", "none")  // avoids text blocking page interactions
+      .selectAll("text")
+      .data(words)
+      .enter()
+      .append("text")
+        .style("font-family", "Playfair Display")
+        .style("font-size", d => d.size + "px")
+        .style("fill", d => d.color)   
+        .attr("text-anchor", "middle")
+        .attr("transform", d =>
+          `translate(${d.x},${d.y}) rotate(${d.rotate})`
+        )
+        .text(d => d.text);
+  }
+}
+
+// =====================================================================
+// MAIN FUNCTION TO LOAD DATA AND INITIALIZE VISUALIZATIONS
+// =====================================================================
+async function initWordCloud() {
+  try {
+    const reviews = await d3.csv("./data/book_reviews_cleaned.csv");
+
+    // High-rated reviews (UNCHANGED logic)
+    const highRated = reviews.filter(d => +d.review_rating_n >= 4.4);
+
+    // Low-rated reviews (UNCHANGED logic)
+    const lowRated  = reviews.filter(d => +d.review_rating_n < 2);
+
+    const n = Math.min(highRated.length, lowRated.length);
+    const highSample = highRated.slice(0, n);
+    const lowSample  = lowRated.slice(0, n);
+
+
+    // --- PROCESS FUNCTION
+    function processReviews(arr) {
+      const allText = arr.map(d => d.review_content_clean).join(" ");
+      const tokens = tokenize(allText);
+      const bigrams = makeBigrams(tokens);
+
+      return d3.rollups(bigrams, v => v.length, d => d)
+        .sort((a, b) => d3.descending(a[1], b[1]))
+        .slice(0, 200)
+        .map(([text, size]) => ({ text, size }));
+    }
+
+    // compute bigrams
+      const bigramsLow  = processReviews(lowSample);
+      const bigramsHigh = processReviews(highSample);
+
+    //combined cloud
+    CombinedWordCloud( bigramsLow, bigramsHigh, {
+      selector: "#wordcloud_combined-mobile"
+    });
+
+  } catch (err) {
+    console.error("Error loading CSV:", err);
+  }
+}
+
+initWordCloud();
